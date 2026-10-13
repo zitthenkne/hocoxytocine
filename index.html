@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>zitthenk học Oxytocin</title>
+<meta name="description" content="Oxytocics trong sản khoa — tăng co & khởi phát chuyển dạ bằng oxytocin, học từng trạm với hoạt họa và mô phỏng.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='88'>💧</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/app.js" defer></script>
+<script src="js/tram-1.js" defer></script>
+<script src="js/tram-2.js" defer></script>
+</head>
+<body data-view="step">
+<div class="deco" aria-hidden="true"><i>✦</i><i>♡</i><i>✿</i><i>✦</i><i>☁</i><i>♡</i></div>
+
+<header class="topbar">
+  <a class="brand" href="#/tram-0-bia" title="Về bìa"><span class="logo">💧</span><span class="brand-t">zitthenk học <b>Oxytocin</b></span></a>
+  <nav class="tools" aria-label="Công cụ">
+    <button id="btnView" class="tbtn" type="button"><span class="i">🗺️</span><span class="t">Bản đồ</span></button>
+    <button id="btnCopy" class="tbtn tbtn-hot" type="button" title="Sao chép link chặng này"><span class="i">📋</span><span class="t">Sao chép link chặng này</span></button>
+    <button id="btnToc" class="tbtn" type="button" title="Mục lục"><span class="i">☰</span><span class="t">Mục lục</span></button>
+    <button id="btnSound" class="tbtn" type="button" title="Bật/tắt âm thanh" aria-label="Bật/tắt âm thanh"><span class="i">🔔</span></button>
+  </nav>
+</header>
+
+<div class="progress" aria-label="Tiến độ">
+  <div class="tube"><div class="fill"></div><span class="drop-mark">💧</span></div>
+  <span class="ptext"></span>
+</div>
+
+<main id="stage"></main>
+<section id="map" aria-label="Bản đồ toàn bài"></section>
+
+<nav class="pager" aria-label="Chuyển trạm">
+  <button id="prev" class="btn big" type="button">← Trạm trước</button>
+  <span class="pager-hint">⌨️ ← → / Space · 👆 vuốt</span>
+  <button id="next" class="btn big btn-go" type="button">Trạm sau →</button>
+</nav>
+
+<aside id="drawer" aria-label="Mục lục">
+  <div class="drawer-head"><b>📚 Mục lục</b><button id="drawerClose" class="tbtn" type="button" aria-label="Đóng">✕</button></div>
+  <div id="tocList"></div>
+</aside>
+<div id="scrim" hidden></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+</body>
+</html>
