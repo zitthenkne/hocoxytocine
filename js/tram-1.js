@@ -21,14 +21,13 @@ const clk = t => `<span class="clock-badge">⏱ ${t}</span>`;
 const dz = t => `<span class="dose-badge">💧 ${t}</span>`;
 const INK = '#4a3f63';
 const UT = 'M40 46 C40 14 160 14 160 46 C168 96 136 132 118 146 L118 176 C118 186 82 186 82 176 L82 146 C64 132 32 96 40 46Z';
-/* Sticker bấm-mở: chi tiết nằm trong popup, màn hình chính chỉ còn hình + 1 câu chốt.
-   k: y = Mổ xẻ Y4 · x = bổ sung ngoài bài · n = ghi nhớ · g = hình/nguồn · w = cảnh báo */
-const stk = (icon, label, body, k = 'y', title = label) => `<button class="stk k-${k}" type="button"><span class="stk-i">${icon}</span>${label}<template data-title="${esc(icon + ' ' + title + (k === 'x' ? ' (＋ bổ sung ngoài bài)' : ''))}">${body}</template></button>`;
-const tray = (...s) => `<div class="tray">${s.join('')}</div>`;
-const key = t => `<p class="key">${t}</p>`;
-const orig = (src, cap) => stk('🖼️', 'Hình gốc', `<img src="${src}" alt="${esc(cap)}" loading="lazy" style="width:100%;border-radius:16px">`, 'g', cap);
-/* Khuôn mỗi trạm: vùng hình + khung điều khiển, luôn cùng nằm trong 1 màn hình */
+/* Khuôn mỗi trạm: vùng hình + cột điều khiển/ghi chú, luôn cùng nằm trong 1 màn hình.
+   Ô ghi chú ①②③ khai ở t.notes — app.js tự gắn số lên hình (toạ độ theo viewBox). */
 const scene = (viz, ctl, mod = '', quest) => `<div class="scene ${mod}"${quest ? ` data-quest="${esc(JSON.stringify(quest))}"` : ''}><div class="viz">${viz}</div><div class="ctl">${ctl}</div></div>`;
+/* Thẻ đổi hình phía trên hình: [[pane, nhãn], …] — pane đầu tiên đang mở */
+const vtabs = (...t) => `<div class="vtabs">${t.map(([k, l], i) => `<button class="btn${i ? '' : ' on'}" type="button" data-show="${k}">${l}</button>`).join('')}</div>`;
+const photo = (src, cap, pane = 'photo') => `<div class="fig pane photo" data-pane="${pane}"><img src="${src}" alt="${esc(cap)}" loading="lazy"><p class="cap">📷 ${cap}</p></div>`;
+const X = '<span class="xtra">✨ bổ sung</span>';
 
 /* Chai dịch truyền: dùng ở trạm 8, 9 */
 const bottle = (o = {}) => `<svg class="bottle ${o.cls || ''}" viewBox="0 0 220 300" role="img" aria-label="Chai dịch truyền nhỏ giọt">
@@ -55,11 +54,13 @@ const bottle = (o = {}) => `<svg class="bottle ${o.cls || ''}" viewBox="0 0 220 
 /* Đường cong độ nhạy tử cung theo tuần thai (trạm 4) */
 const gaS = w => w < 20 ? 0 : w < 30 ? (w - 20) / 10 * .3 : w < 34 ? .3 + (w - 30) / 4 * .55 : .85 + Math.min(w - 34, 6) / 6 * .05;
 const gaX = w => 50 + (w - 10) * 13.75, gaY = s => 210 - s * 170;
+const setGA = (b, w) => { const r = $('#ga', b); r.value = w; fire(r, 'input'); };
 
 TRAM.push(
 /* ================= 0. BÌA ================= */
 {
   slug: 'bia', part: 0, icon: '💧', title: 'zitthenk học Oxytocin', cover: true,
+  how: ['Bấm <b>▶ Bắt đầu học</b>', 'Mỗi trạm làm theo dòng 📝 → bấm ô ①②③ ôn', 'Trạm 🎯 làm xong mới qua'],
   html: () => scene(`<div class="fig" style="background:var(--pink)">
       <svg class="mascot" viewBox="0 0 320 290" role="img" aria-label="Bé Oxy – giọt oxytocin dễ thương cạnh chai dịch truyền">
         <line x1="252" y1="18" x2="252" y2="282" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>
@@ -86,14 +87,13 @@ TRAM.push(
       </svg></div>`,
     `<h1>zitthenk học <span>Oxytocin</span></h1>
       <p class="lead">Tăng co & khởi phát chuyển dạ — 25 trạm, mỗi màn hình đúng 1 ý.</p>
-      <div class="pills" style="justify-content:flex-start">
-        <span class="pill c-butter">🚦 Chỉ định</span><span class="pill c-sky">🧨 Khởi phát</span><span class="pill c-mint">🚀 Tăng co</span><span class="pill c-lav">🧪 Oxytocics khác</span>
-      </div>
-      <div class="row"><button class="btn btn-go" type="button" data-go="1">▶ Bắt đầu học</button><a class="btn" href="#/ban-do">🗺️ Bản đồ</a></div>
-      ${tray(
-        stk('🎯', 'Mục tiêu bài', '<ol><li>Trình bày chỉ định & chống chỉ định của oxytocin trong sản khoa.</li><li>Trình bày cách dùng oxytocin trong khởi phát chuyển dạ.</li><li>Trình bày cách dùng oxytocin trong thúc đẩy chuyển dạ.</li><li>Mô tả cách sử dụng các oxytocics khác.</li></ol>', 'n'),
-        stk('⌨️', 'Cách dùng', '<ul><li><b>← →</b> hoặc <b>Space</b>: chuyển trạm · điện thoại: vuốt ngang.</li><li><b>📋</b> trên thanh trên cùng: chép link đúng trạm đang học, mở máy khác là học tiếp.</li><li>Sticker tròn ở mỗi trạm: 📌 ghi nhớ · 🔍 mổ xẻ Y4 · ✨ bổ sung ngoài bài · 🖼️ hình gốc.</li></ul>', 'g'),
-        stk('📚', 'Nguồn', '<p>Bài giảng “Oxytocics trong sản khoa — Tăng co & Phát khởi chuyển dạ bằng oxytocin”, Bộ môn Phụ Sản, Khoa Y, ĐHYD TP.HCM — Phạm Văn Đức, Âu Nhựt Luân.</p><p>Tham khảo: WHO <i>Managing Complications in Pregnancy and Childbirth</i>; RCOG <i>Induction of labour</i>. Phần ✨ bổ sung lấy từ Williams Obstetrics / WHO.</p>', 'g'))}`, 'cover'),
+      <div class="goals"><b class="hand">🎯 Học xong bà sẽ:</b>
+        <div class="goal"><i>1</i>Nêu chỉ định & chống chỉ định của oxytocin</div>
+        <div class="goal"><i>2</i>Dùng oxytocin khởi phát chuyển dạ</div>
+        <div class="goal"><i>3</i>Dùng oxytocin tăng co (thúc đẩy chuyển dạ)</div>
+        <div class="goal"><i>4</i>Dùng các oxytocics khác: PG, ergometrine</div></div>
+      <div class="row"><button class="btn btn-go" type="button" data-go="1">▶ Bắt đầu học</button><a class="btn" href="#/ban-do">🗺️ Bản đồ lộ trình</a></div>
+      <p class="mut small" style="margin:0">📚 Bài giảng “Oxytocics trong sản khoa”, BM Phụ Sản ĐHYD TP.HCM (Phạm Văn Đức, Âu Nhựt Luân). ✨ = bổ sung từ Williams / WHO.</p>`, 'cover'),
 },
 
 /* ================= 1. NHÀ MÁY HẠ ĐỒI ================= */
@@ -112,8 +112,8 @@ TRAM.push(
         <g ${tip('Sợi trục thần kinh (bó hạ đồi – tuyến yên)|Oxytocin đi kèm “vệ sĩ” oxytocin-neurophysin, chạy dọc sợi trục từ hạ đồi xuống thùy sau.', 'axon')}><path d="M186 198 C196 222 218 236 228 252" fill="none" stroke="transparent" stroke-width="14"/></g>
         <circle r="4.5" fill="#ff5d8f" stroke="${INK}" stroke-width="1.5"><animateMotion dur="2.4s" repeatCount="indefinite" path="M186 198 C196 222 218 236 228 252"/></circle>
         <circle r="4.5" fill="#ff5d8f" stroke="${INK}" stroke-width="1.5"><animateMotion dur="2.4s" begin="-1.2s" repeatCount="indefinite" path="M214 180 C224 208 232 232 232 252"/></circle>
-        <g ${tip('Nhân trên thị (supraoptic nucleus)|“Xưởng” số 1 tổng hợp oxytocin.', 'son')}><circle cx="186" cy="198" r="10" fill="#e76f95" stroke="${INK}" stroke-width="3"/>${ping(186, 198)}</g>
-        <g ${tip('Nhân cạnh não thất (paraventricular nucleus)|“Xưởng” số 2 tổng hợp oxytocin.', 'pvn')}><circle cx="214" cy="180" r="10" fill="#b197fc" stroke="${INK}" stroke-width="3"/>${ping(214, 180)}</g>
+        <g ${tip('Nhân trên thị (supraoptic nucleus)|“Xưởng” số 1 tổng hợp oxytocin.', 'son')}><circle cx="186" cy="198" r="16" fill="transparent"/><circle cx="186" cy="198" r="10" fill="#e76f95" stroke="${INK}" stroke-width="3"/>${ping(186, 198)}</g>
+        <g ${tip('Nhân cạnh não thất (paraventricular nucleus)|“Xưởng” số 2 tổng hợp oxytocin.', 'pvn')}><circle cx="214" cy="180" r="16" fill="transparent"/><circle cx="214" cy="180" r="10" fill="#b197fc" stroke="${INK}" stroke-width="3"/>${ping(214, 180)}</g>
         <g ${tip('Vào tuần hoàn → tới tử cung|Oxytocin BẮT BUỘC đi qua ngả hệ tuần hoàn rồi mới tác dụng trên cơ tử cung ⇒ tác dụng NHANH và NGẮN. (Cũng tới tuyến vú → phản xạ tiết sữa.)', 'mau')}>
           <path d="M250 262 C300 272 330 240 372 248 C392 252 404 258 414 266" fill="none" stroke="${INK}" stroke-width="20" stroke-linecap="round"/>
           <path d="M250 262 C300 272 330 240 372 248 C392 252 404 258 414 266" fill="none" stroke="#ff8fa3" stroke-width="13" stroke-linecap="round"/>
@@ -127,13 +127,17 @@ TRAM.push(
         <text x="186" y="292" text-anchor="end" font-size="11" font-weight="700" fill="#6f6684">Thùy trước</text>
         <text x="232" y="292" text-anchor="start" font-size="11" font-weight="800" fill="#e0568a">Thùy sau</text>
       </svg></div>`,
-    `<div class="hot-out"></div>
-      ${key('🏭 Hạ đồi <b>sản xuất</b> → 📦 thùy sau tuyến yên <b>tiết</b> → 🩸 máu → 🫄 cơ tử cung')}
-      ${tray(
-        stk('📌', 'Câu chốt', '<p>Oxytocin là <b>hormone peptide</b> được tổng hợp tại <b>nhân trên thị</b> và <b>nhân cạnh não thất</b> của <b>hạ đồi</b>, hoạt động nhờ kết hợp protein đặc biệt <b>oxytocin-neurophysin</b>, được <b>tiết từ các đầu cùng thần kinh ở thùy sau tuyến yên</b>.</p><p>🎯 Tác động lên thụ thể trên <b>cơ trơn tử cung</b> ⇒ cơn co tăng <b>tần số, cường độ, thời gian</b>.</p>', 'n'),
-        stk('🔍', 'Bẫy thi', '<p>“Oxytocin được tổng hợp ở thùy sau tuyến yên” → <b>SAI</b>.</p><p>Thùy sau chỉ là “kho + cửa xuất”. Thân neuron ở nhân trên thị & nhân cạnh não thất mới là nơi tổng hợp; hormone đi dọc sợi trục cùng neurophysin rồi được phóng thích vào máu ở thùy sau.</p>', 'y', 'Bẫy thi: tổng hợp ở đâu?'),
-        stk('✨', 'Phản xạ Ferguson', '<p>Ngôi thai ép vào cổ tử cung / âm đạo → tín hiệu thần kinh lên hạ đồi → <b>tăng tiết oxytocin</b> → cơn co mạnh hơn → ngôi ép mạnh hơn nữa… = <b>vòng xoắn dương tính</b>.</p><p>Vì vậy nồng độ oxytocin tăng vọt khi chuyển dạ, đạt đỉnh ở giai đoạn sổ thai (Trạm 4).</p>', 'x'))}`, 'hot',
-    [['son|pvn', '🏭 Oxytocin được <b>SẢN XUẤT</b> ở đâu? Chạm 1 trong 2 nhân.'], ['axon', '🚚 Nó đi đường nào xuống tuyến yên?'], ['sau', '📦 Được <b>TIẾT</b> vào máu ở thùy nào?'], ['mau', '🩸 Rồi đi đường nào để tới tử cung?']]),
+    `<div class="hot-out"></div>`, 'hot',
+    [['son+pvn', '🏭 Oxytocin được <b>SẢN XUẤT</b> ở đâu? Có <b>2 nhân</b> — chạm <b>đủ cả 2</b>.'], ['axon', '🚚 Nó đi đường nào xuống tuyến yên?'], ['sau', '📦 Được <b>TIẾT</b> vào máu ở thùy nào?'], ['mau', '🩸 Rồi đi đường nào để tới tử cung?'], ['truoc', '⚠️ Bẫy: thùy nào <b>KHÔNG</b> dính tới oxytocin?']]),
+  gate: true,
+  how: ['Đọc 🎯 nhiệm vụ → chạm đúng chỗ trên hình', 'Đúng → mở 1 ô ghi nhớ', 'Xong 5 nhiệm vụ → bấm ô ①–④ ôn lại'],
+  notes: [
+    [1, '<b>Nhân trên thị</b> + <b>nhân cạnh não thất</b> (hạ đồi) = nơi <b>SẢN XUẤT</b>', { at: [200, 189, 30], pin: [158, 178], more: 'Oxytocin là <b>hormone peptide</b> của hạ đồi — có 2 “xưởng”, đề hay hỏi đủ cả 2.' }],
+    [2, 'Đi dọc <b>sợi trục</b> cùng “vệ sĩ” <b>oxytocin-neurophysin</b>', { at: [208, 225, 24], pin: [254, 222] }],
+    [3, '<b>Thùy sau</b> tuyến yên chỉ là <b>kho + cửa xuất</b> vào máu', { at: [232, 258, 24], pin: [209, 290], more: `${X} <b>Phản xạ Ferguson</b>: ngôi ép CTC/âm đạo → hạ đồi → ↑ tiết oxytocin → co mạnh hơn → ép mạnh hơn = vòng xoắn dương tính ⇒ đỉnh ở giai đoạn sổ thai (Trạm 4).` }],
+    [4, 'Qua <b>máu</b> → thụ thể <b>cơ trơn tử cung</b> ⇒ ↑ <b>tần số · cường độ · thời gian</b> cơn co', { at: [[330, 256, 52], [402, 196, 30]], more: 'Bắt buộc đi đường tuần hoàn ⇒ tác dụng <b>NHANH & NGẮN</b> (Trạm 3, 5). Cũng tới tuyến vú → phản xạ tiết sữa.' }],
+    ['⚠️', 'Bẫy: “tổng hợp ở thùy sau” = <b>SAI</b> · <b>thùy trước</b> không liên quan', { at: [198, 258, 22], pin: [182, 234] }],
+  ],
 },
 
 /* ================= 2. CHÂN DUNG 9 VIÊN BI ================= */
@@ -143,7 +147,7 @@ TRAM.push(
   html: () => {
     const B = [['Cys', 70, 180, '#fff1b8'], ['Tyr', 52, 108, '#cfe6fb'], ['Ile', 100, 50, '#cdeedd'], ['Gln', 180, 40, '#ffd3e0'], ['Asn', 232, 98, '#e4dcff'], ['Cys', 200, 170, '#fff1b8'], ['Pro', 276, 214, '#ffe0c2'], ['Leu', 352, 214, '#cdeedd'], ['Gly', 424, 170, '#cfe6fb']];
     const bonds = B.map(b => b[1] + ' ' + b[2]).join(' L');
-    return scene(`<div class="fig" id="pep"><svg viewBox="0 0 470 260" role="img" aria-label="Cấu trúc 9 acid amin của oxytocin">
+    return scene(`${vtabs(['pep', '🎨 Hình vẽ'], ['photo', '📷 Hình thầy'])}<div class="fig pane on" data-pane="pep" id="pep"><svg viewBox="0 0 470 260" role="img" aria-label="Cấu trúc 9 acid amin của oxytocin">
         <text id="pepName" x="330" y="50" text-anchor="middle" font-family="Baloo 2, cursive" font-size="24" font-weight="800" fill="#e0568a">Oxytocin</text>
         <path d="M${bonds}" fill="none" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>
         <path d="M70 180 L200 170" stroke="#f2b705" stroke-width="7" stroke-dasharray="7 6" stroke-linecap="round"/>
@@ -152,16 +156,19 @@ TRAM.push(
         <path d="M134 128 q10 9 20 0" stroke="${INK}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
         ${B.map(([n, x, y, c], i) => `<g class="bead${i === 2 || i === 7 ? ' mut' : ''}" id="bd${i + 1}"><circle cx="${x}" cy="${y}" r="27" fill="${c}"/><text x="${x}" y="${y}">${n}</text></g><text x="${x + 22}" y="${y - 22}" font-size="12" font-weight="800" fill="#6f6684">${i + 1}</text>`).join('')}
         <text x="452" y="132" text-anchor="middle" font-size="14" font-weight="800" fill="${INK}">–NH₂</text>
-      </svg></div>`,
+      </svg></div>${photo('assets/hinh1-co-che-oxytocin.png', 'Hình 1 bài giảng — cơ chế & chuỗi acid amin')}`,
     `<button class="btn btn-lav" type="button" id="morph" aria-pressed="false">🔁 Biến hình thành Vasopressin (ADH)</button>
-      <p class="hot-out" id="morphCap">Vòng 6 acid amin khóa bằng <b>cầu S–S</b>, thêm đuôi 3 acid amin.</p>
-      ${key('💊 Peptide ⇒ uống bị pepsin phá · gắn thụ thể màng ⇒ <b>nhanh & ngắn</b>')}
-      ${tray(
-        stk('📌', '2 hệ quả', '<ol><li><b>Uống vô ích:</b> pepsin dạ dày cắt nát ⇒ chỉ dùng <b>ngoài ruột</b>: tiêm bắp (kể cả cơ tử cung) hoặc truyền TM chậm (Trạm 5).</li><li><b>Gắn thụ thể màng</b> (GPCR) và phải đi qua tuần hoàn ⇒ <b>nhanh & ngắn</b> (Trạm 3).</li></ol><p>Cấu trúc: vòng 6 acid amin nhờ <b>cầu disulfide Cys¹–Cys⁶</b>, đuôi 3 acid amin, đầu C amid hóa (–NH₂).</p>', 'n', '2 hệ quả lâm sàng của “peptide”'),
-        stk('💦', 'Ngộ độc nước', '<p>Oxytocin và vasopressin (ADH) chỉ khác <b>2/9</b> acid amin (vị trí 3: Ile↔Phe; vị trí 8: Leu↔Arg) ⇒ oxytocin liều cao “gõ nhầm cửa” thụ thể V2 ở thận ⇒ <b>giữ nước tự do</b>.</p><p>Williams: truyền <b>≥ 20 mIU/phút</b> làm giảm rõ thanh thải nước tự do; kèm <b>nhiều dịch không điện giải</b> (VD Glucose 5%) ⇒ hạ Na máu, co giật, hôn mê. Một lý do bơm tiêm điện được ưa chuộng: <b>giảm thể tích dịch truyền</b>.</p>', 'x'),
-        stk('🔍', 'Asp hay Asn?', '<p>Hình chuỗi acid amin trong bài giảng ghi viên số 5 là “Asp”. Trình tự chuẩn của oxytocin là <b>Cys-Tyr-Ile-Gln-Asn-Cys-Pro-Leu-Gly-NH₂</b> — viên 5 là <b>Asn</b> (asparagine). Hình ở đây vẽ theo trình tự chuẩn.</p>', 'y', 'Soi kỹ Hình 1'),
-        orig('assets/hinh1-co-che-oxytocin.png', 'Hình 1 – bài giảng gốc'))}`);
+      <p class="hot-out" id="morphCap">Vòng 6 acid amin khóa bằng <b>cầu S–S</b>, thêm đuôi 3 acid amin.</p>`);
   },
+  how: ['Bấm <b>🔁 Biến hình</b> → 2 viên đổi màu = chỗ khác ADH', 'Bấm ô ①②③ → hình sáng đúng chỗ', '<b>📷 Hình thầy</b> để so'],
+  notes: [
+    [1, '<b>Vòng 6 acid amin</b> khóa bằng <b>cầu S–S</b> (Cys¹–Cys⁶)', { at: [140, 112, 100], pin: [135, 222] }],
+    [2, '<b>Đuôi 3 acid amin</b> Pro–Leu–Gly, đầu C amid hóa (<b>–NH₂</b>)', { at: [360, 196, 82] }],
+    [3, 'Chỉ khác ADH <b>2/9 viên</b>: <b>3 (Ile↔Phe)</b> & <b>8 (Leu↔Arg)</b> ⇒ liều cao <b>giữ nước</b>', { at: [[100, 50, 34], [352, 214, 34]], act: b => { if (!$('#pep', b).classList.contains('vaso')) $('#morph', b).click(); },
+      more: `${X} Liều cao “gõ nhầm cửa” thụ thể V2 ở thận. Williams: <b>≥ 20 mIU/ph</b> + nhiều <b>dịch không điện giải</b> (G5%) ⇒ <b>ngộ độc nước</b>: hạ Na, co giật, hôn mê. Bơm tiêm điện giúp <b>giảm thể tích dịch</b>.` }],
+    ['💊', 'Là <b>peptide</b> ⇒ <b>uống bị pepsin phá</b> → chỉ <b>TB / TTM chậm</b> · gắn thụ thể màng ⇒ <b>nhanh & ngắn</b>'],
+    ['🔍', 'Hình bài giảng ghi viên 5 là “Asp” — chuẩn là <b>Asn</b> (Cys-Tyr-Ile-Gln-<b>Asn</b>-Cys-Pro-Leu-Gly-NH₂)', { at: [232, 98, 32] }],
+  ],
   mount(root) {
     const b = $('#morph', root), fig = $('#pep', root), cap = $('#morphCap', root);
     const t3 = $('#bd3 text', root), t8 = $('#bd8 text', root), nm = $('#pepName', root);
@@ -187,7 +194,7 @@ TRAM.push(
     let helix = '';
     for (let k = 0; k < 7; k++) helix += `<rect x="${62 + k * 11}" y="58" width="9" height="56" rx="4" fill="#cdeedd" stroke="${INK}" stroke-width="2"/>`;
     const ar = (d, s) => `<path data-s="${s}" d="${d}" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round" marker-end="url(#ah)"/>`;
-    return scene(`<div class="fig"><svg viewBox="0 0 520 330" role="img" aria-label="Chuỗi tín hiệu oxytocin trong tế bào cơ trơn tử cung">
+    return scene(`${vtabs(['co-che', '🎨 Hình vẽ'], ['photo', '📷 Hình thầy'])}<div class="fig pane on" data-pane="co-che"><svg viewBox="0 0 520 330" role="img" aria-label="Chuỗi tín hiệu oxytocin trong tế bào cơ trơn tử cung">
       <defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="${INK}"/></marker></defs>
       <rect x="0" y="0" width="520" height="70" fill="#eaf4fd"/><rect x="0" y="104" width="520" height="226" fill="#fff4e8"/>
       <rect x="0" y="70" width="520" height="34" fill="#ffe0c2"/>${heads}
@@ -215,7 +222,7 @@ TRAM.push(
         <path d="M414 258 H452 M414 292 H452 M470 258 H508 M470 292 H508" stroke="#e76f95" stroke-width="4" stroke-linecap="round"/>
         <rect x="434" y="268" width="54" height="14" rx="7" fill="#ff8fa3" stroke="${INK}" stroke-width="2.5"/></g>
         <text x="461" y="240" text-anchor="middle" font-size="13" font-weight="900" fill="#e0568a">CO SỢI CƠ 💪</text></g>
-    </svg></div>`,
+    </svg></div>${photo('assets/hinh1-co-che-oxytocin.png', 'Hình 1 bài giảng — cơ chế tác động của oxytocin')}`,
     `<div class="row"><button class="btn btn-go seq-next" type="button">▶ Mắt xích tiếp</button><button class="btn seq-reset" type="button">↺</button></div>
     <ol class="seq-list">
       <li class="mut">👆 Mỗi lần bấm sáng 1 mắt xích (7 mắt xích).</li>
@@ -226,12 +233,14 @@ TRAM.push(
       <li data-s="5"><b class="n">5</b> DAG hoạt hóa <b>protein kinase C</b></li>
       <li data-s="6"><b class="n">6</b> Ca²⁺–<b>calmodulin</b> → MLCK → phosphoryl hóa myosin</li>
       <li data-s="7"><b class="n">7</b> <b>Co sợi cơ</b> ⇒ ↑ tần số · ↑ cường độ · ↑ thời gian cơn co</li>
-    </ol>
-    ${key('⚡ Phải đi qua máu rồi mới tới thụ thể màng ⇒ <b>NHANH & NGẮN</b>')}
-    ${tray(
-      stk('✨', 'Truyền lâu → đờ TC', '<p>Kích thích thụ thể kéo dài ⇒ thụ thể bị <b>giải mẫn cảm & giảm điều hòa</b>. Sau một cuộc tăng co kéo dài, cơ tử cung “lì” với oxytocin ⇒ tăng nguy cơ <b>băng huyết sau sanh do đờ tử cung</b>. Thêm lý do để chỉ dùng <b>liều thấp nhất có hiệu quả</b>.</p>', 'x', 'Vì sao truyền oxytocin quá lâu dễ đờ tử cung?'),
-      orig('assets/hinh1-co-che-oxytocin.png', 'Hình 1 – cơ chế'))}`, 'seq');
+    </ol>`, 'seq');
   },
+  gate: true, open: true,
+  how: ['Bấm <b>▶ Mắt xích tiếp</b> 7 lần — mỗi lần sáng 1 khâu', 'Đọc câu vàng: khâu đó làm gì', '<b>📷 Hình thầy</b> để so'],
+  notes: [
+    ['⚡', 'Phải đi qua <b>máu</b> rồi gắn <b>thụ thể màng</b> ⇒ tác dụng <b>NHANH & NGẮN</b>', { at: [100, 70, 48] }],
+    ['✨', 'Truyền <b>quá lâu</b> → thụ thể <b>giải mẫn cảm</b> ⇒ dễ <b>đờ tử cung</b> sau sanh', { more: `${X} Kích thích kéo dài ⇒ thụ thể giảm điều hòa, cơ tử cung “lì” với oxytocin ⇒ ↑ nguy cơ <b>băng huyết sau sanh do đờ tử cung</b>. Thêm lý do dùng <b>liều thấp nhất có hiệu quả</b>.` }],
+  ],
 },
 
 /* ================= 4. TỬ CUNG THỨC GIẤC ================= */
@@ -257,13 +266,17 @@ TRAM.push(
       <div class="row" style="flex-wrap:nowrap;align-items:center">
         <svg viewBox="0 0 200 200" width="76" height="76" style="flex:none" aria-hidden="true"><g id="gaUt" class="ut-pulse"><path d="${UT}" fill="#ffd3e0" stroke="${INK}" stroke-width="6"/><circle cx="84" cy="70" r="6" fill="${INK}"/><circle cx="116" cy="70" r="6" fill="${INK}"/><path id="gaMouth" d="M88 92 q12 8 24 0" stroke="${INK}" stroke-width="5" fill="none" stroke-linecap="round"/></g></svg>
         <div class="hot-out" id="gaOut" style="flex:1"></div>
-      </div>
-      ${key('📅 Nhạy từ <b>tuần 20</b> · tăng chậm 20 → 30 · <b>ổn định từ 34</b>')}
-      ${tray(
-        stk('⏰', 'Khi chuyển dạ', '<ul><li>🤰 Gần dự sanh: nồng độ nền.</li><li>⏰ <b>Bắt đầu chuyển dạ:</b> nồng độ oxytocin tăng <b>rất nhanh, gấp đôi – gấp ba</b>.</li><li>👶 <b>Giai đoạn sổ thai:</b> đạt <b>tối đa</b>…</li><li>🫀 …và giữ mức cao <b>cho đến khi co hồi tử cung</b>.</li></ul>', 'n', 'Nồng độ oxytocin trong chuyển dạ'),
-        stk('🔍', 'Liên hệ PG', '<p>Trước tuần 20 cơ tử cung gần như “điếc” với oxytocin và độ nhạy chỉ tăng chậm tới tuần 30 ⇒ oxytocin kém hiệu quả ở thai nhỏ.</p><p>Ngược lại, <b>đáp ứng của tử cung với prostaglandins hầu như không thay đổi suốt thai kỳ</b> ⇒ PG dùng được ở mọi tuổi thai (Trạm 19).</p>', 'y', 'Vì sao TCN II hay dùng prostaglandin?'),
-        stk('✨', 'Gap junction', '<p>Cuối thai kỳ, <b>mật độ thụ thể oxytocin</b> trên cơ tử cung tăng vọt, cùng với tăng <b>liên kết khe (gap junction – connexin 43)</b> giúp các tế bào cơ co đồng bộ thành một cơn co hiệu quả.</p>', 'x', 'Bên dưới “độ nhạy” là gì?'))}`);
+      </div>`);
   },
+  how: ['Kéo thanh <b>tuần thai</b>', 'Xem chấm trên đường cong + tử cung nhỏ co dần', 'Bấm ô ①②③ nhảy tới mốc'],
+  coach: '#ga',
+  notes: [
+    [1, '<b>Trước tuần 20</b>: gần như “điếc” với oxytocin', { at: [118, 140, 66], act: b => setGA(b, 16) }],
+    [2, '<b>20 → 30 tuần</b>: nhạy tăng <b>chậm</b>', { at: [256, 150, 66], act: b => setGA(b, 26) }],
+    [3, '<b>Từ tuần 34</b>: <b>ổn định</b> tới gần ngày dự sanh', { at: [421, 64, 50], act: b => setGA(b, 38) }],
+    ['⏰', 'Vào chuyển dạ nồng độ <b>×2–3</b> · <b>tối đa ở sổ thai</b> · giữ cao tới khi <b>co hồi tử cung</b>'],
+    ['🔍', 'Prostaglandin thì đáp ứng <b>không đổi</b> suốt thai kỳ ⇒ thai nhỏ (TCN II) dùng PG', { more: `${X} Cuối thai kỳ ↑ mật độ <b>thụ thể oxytocin</b> + ↑ <b>gap junction (connexin 43)</b> ⇒ tế bào cơ co đồng bộ.` }],
+  ],
   mount(root) {
     const r = $('#ga', root), dot = $('#gaDot', root), ln = $('#gaLine', root), out = $('#gaOut', root), ut = $('#gaUt', root), mo = $('#gaMouth', root), wl = $('#gaW', root);
     const upd = () => {
@@ -288,7 +301,7 @@ TRAM.push(
     const c45 = 1 - Math.exp(-45 / 9);
     for (let t = 0; t <= 60.01; t += .5) { const c = t <= 45 ? 1 - Math.exp(-t / 9) : c45 * .5 ** ((t - 45) / 5); d += (t ? 'L' : 'M') + PX(t).toFixed(1) + ' ' + PY(c).toFixed(1); }
     const vl = (t, n, col = INK) => `<line x1="${PX(t)}" y1="46" x2="${PX(t)}" y2="160" stroke="${col}" stroke-width="2" stroke-dasharray="4 4"/><circle cx="${PX(t)}" cy="36" r="10" fill="#fff" stroke="${col}" stroke-width="2.5"/><text x="${PX(t)}" y="41" text-anchor="middle" font-size="13" font-weight="900" fill="${col}">${n}</text>`;
-    return scene(`<div class="fig pane on" data-pane="r" id="routeFig"><svg viewBox="0 0 520 230" role="img" aria-label="Các đường dùng oxytocin">
+    return scene(`${vtabs(['r', '💊 Đường dùng'], ['c', '📈 Nồng độ'])}<div class="fig pane on" data-pane="r" id="routeFig"><svg viewBox="0 0 520 230" role="img" aria-label="Các đường dùng oxytocin">
         <path class="route-path" id="rp-uong" d="M76 46 L136 46"/>
         <path d="M184 46 C220 46 236 100 262 116" fill="none" stroke="#eee" stroke-width="9" stroke-linecap="round" stroke-dasharray="3 9"/>
         <path class="route-path" id="rp-bap" d="M76 118 L262 118"/>
@@ -315,23 +328,21 @@ TRAM.push(
         ${vl(3.5, 1, '#2b8a5e')}${vl(40, 2)}${vl(45, 3, '#e0568a')}${vl(50, 4, '#e0568a')}
         <text x="270" y="204" text-anchor="middle" font-size="12.5" font-weight="800" fill="#6f6684">① có tác dụng · ② ổn định · ③ ngưng truyền · ④ còn ½</text>
       </svg></div>`,
-    `<div class="seg"><button class="btn on" type="button" data-show="r">💊 Đường dùng</button><button class="btn" type="button" data-show="c">📈 Nồng độ</button></div>
-      <div class="seg" id="routes">
-        <button class="btn" type="button" data-r="uong">Uống</button>
-        <button class="btn" type="button" data-r="bap">Tiêm bắp</button>
-        <button class="btn" type="button" data-r="tm">TM chậm</button>
+    `<div class="seg" id="routes">
+        <button class="btn" type="button" data-r="uong">💊 Uống</button>
+        <button class="btn" type="button" data-r="bap">💉 Tiêm bắp</button>
+        <button class="btn" type="button" data-r="tm">🩸 TM chậm</button>
       </div>
-      <p class="hot-out" id="routeOut">👆 Chọn 1 đường dùng.</p>
-      <div class="minis">
-        <div class="mini c-mint"><b>3–4′</b><span>có tác dụng</span></div>
-        <div class="mini c-pink"><b>5′</b><span>t½</span></div>
-        <div class="mini c-sky"><b>40′</b><span>ổn định</span></div>
-      </div>
-      ${tray(
-        stk('🚮', 'Thải trừ', '<p>Oxytocin được thải trừ tại <b>gan</b>, <b>thận</b>, <b>tuyến vú</b>.</p><p>Hấp thu tốt bằng đường <b>ngoài ruột</b>; trong đường tiêu hóa bị <b>pepsin</b> dạ dày phân hủy ⇒ dùng <b>tiêm bắp (kể cả cơ tử cung)</b> và <b>truyền tĩnh mạch chậm</b>.</p>', 'n', 'Hấp thu & thải trừ'),
-        stk('🔍', '2 luật sống còn', '<ol><li><b>Không chỉnh tăng liều dày hơn mỗi 30 phút:</b> nồng độ cần ~40 phút mới ổn định — tăng sớm là “cộng dồn” chưa kịp thấy hiệu quả ⇒ cơn co cường tính (Trạm 10).</li><li><b>Rối loạn cơn co ⇒ cắt hẳn & chờ:</b> t½ chỉ 5 phút ⇒ nếu do oxytocin, cơn co cường tính hết sau vài phút (Trạm 16).</li></ol>', 'y', 'Biểu đồ nồng độ giải thích 2 luật nào?'),
-        stk('✨', 'Oxytocinase', '<p>Nhau thai tiết <b>oxytocinase</b> (cystyl aminopeptidase) phân hủy oxytocin trong huyết tương mẹ — góp phần làm thời gian bán hủy rất ngắn.</p>', 'x'))}`);
+      <p class="hot-out" id="routeOut">👆 Chọn 1 đường dùng — xem thuốc có tới được tử cung không.</p>`);
   },
+  how: ['Bấm <b>Uống / Tiêm bắp / TM chậm</b> → thuốc có tới tử cung?', 'Bấm ô ①②③ → biểu đồ nồng độ sáng đúng mốc'],
+  coach: '#routes',
+  notes: [
+    [1, '<b>3–4 phút</b> sau truyền TM đã có tác dụng', { fig: '[data-pane=c] svg', at: [66, 100, 28] }],
+    [2, '<b>~40 phút</b> nồng độ mới <b>ổn định</b> ⇒ chỉnh tăng liều cách <b>≥ 30 phút</b>', { fig: '[data-pane=c] svg', at: [340, 100, 30], more: 'Tăng sớm = “cộng dồn” khi chưa kịp thấy hiệu quả ⇒ cơn co <b>cường tính</b> (Trạm 10).' }],
+    [3, 'Ngưng truyền → <b>t½ 5 phút</b> ⇒ rối loạn cơn co: <b>cắt hẳn & chờ</b> vài phút', { fig: '[data-pane=c] svg', at: [[377, 100, 24], [415, 100, 24]], more: `Nếu do oxytocin, cường tính hết sau vài phút (Trạm 16). ${X} Nhau tiết <b>oxytocinase</b> phân hủy oxytocin ⇒ t½ rất ngắn.` }],
+    ['🚮', 'Thải trừ ở <b>gan · thận · tuyến vú</b>'],
+  ],
   mount(root) {
     const fig = $('#routeFig', root), out = $('#routeOut', root);
     const T = {
@@ -354,9 +365,9 @@ TRAM.push(
 /* ================= 6. CHỈ ĐỊNH & CHỐNG CHỈ ĐỊNH ================= */
 {
   slug: 'chi-dinh-chong-chi-dinh', part: 2, icon: '🚦', title: 'Gọi hay không gọi Oxytocin?',
-  lead: 'Chọn 1 sticker → bấm vào hộp đúng.',
+  lead: 'Mỗi lần 1 thẻ — bấm vào hộp đúng.',
   html: () => scene(`<div class="sort">
-      <div class="pool">
+      <div class="pool no-swipe">
         <button class="card" type="button" data-bin="ccd" data-why="Suy thai cấp = CCĐ tuyệt đối." data-hint="thai đang thiếu oxy mà còn ép co?">💔 Suy thai cấp</button>
         <button class="card" type="button" data-bin="tt" data-why="Vết mổ cũ: tăng nguy cơ NỨT VẾT MỔ." data-hint="không cấm tuyệt đối, nhưng có nguy cơ nứt vết mổ.">✂️ Vết mổ sanh cũ</button>
         <button class="card" type="button" data-bin="cd" data-why="Băng huyết do đờ tử cung = chỉ định." data-hint="tử cung đã trống, cần co lại để cầm máu.">🩸 Đờ tử cung sau sổ nhau</button>
@@ -371,13 +382,16 @@ TRAM.push(
         <div class="bin" role="button" tabindex="0" data-bin="tt" style="--c:var(--butter)"><h4>⚠️ Thận trọng</h4><div class="slot"></div></div>
         <div class="bin" role="button" tabindex="0" data-bin="ccd" style="--c:var(--pink)"><h4>⛔ CCĐ</h4><div class="slot"></div></div>
       </div>
-      <p class="sort-msg">👆 Chọn 1 sticker ở trên.</p>
-    </div>`,
-    `${key('☠ Nguy hiểm nhất khi <b>thai còn trong buồng tử cung</b>')}
-    ${tray(
-      stk('📌', '3 chỉ định', '<p>Chỉ định = các trường hợp cần <b>tăng hoạt động cơ tử cung</b>:</p><ol><li>Khởi phát chuyển dạ.</li><li>Thúc đẩy chuyển dạ, tăng cơn co tử cung.</li><li>Dự phòng & điều trị <b>băng huyết sau sanh do đờ tử cung</b> — sau sanh hay sau mổ sanh.</li></ol>', 'n', 'Chỉ định của oxytocin'),
-      stk('🔍', 'Mẹo nhớ CCĐ', '<p>Chống chỉ định tuyệt đối: <b>suy thai cấp</b> và <b>bất xứng đầu chậu tuyệt đối</b>.</p><p>Mẹo: “<b>Con đang ngộp</b>” & “<b>Cửa quá hẹp</b>” — càng ép co càng hại: một bên thai thiếu oxy thêm, một bên tử cung vỡ.</p>', 'y', 'Mẹo nhớ 2 CCĐ tuyệt đối'),
-      stk('⚠️', '3 ca thận trọng', '<ul><li><b>Vết mổ sanh cũ</b> → nứt vết mổ.</li><li><b>Đa sản</b> → vỡ tử cung.</li><li><b>Ngôi ngược</b> (khởi phát) → tăng nguy cơ cho sơ sinh so với mổ chủ động.</li></ul><p>⇒ Đa sản & sẹo mổ: <b>tuyệt đối không dùng dung dịch nồng độ cao</b> (Trạm 17).</p>', 'w', 'Phải hết sức thận trọng khi'))}`, 'game'),
+      <p class="sort-msg">👆 Thẻ này thuộc hộp nào? Bấm vào hộp.</p>
+    </div>`, '', 'game'),
+  gate: true,
+  how: ['Đọc thẻ to ở trên', 'Bấm hộp đúng: <b>✅ Chỉ định · ⚠️ Thận trọng · ⛔ CCĐ</b>', 'Xếp đủ 8 thẻ → mở 4 ô ghi nhớ'],
+  notes: [
+    ['✅', '3 chỉ định (cần ↑ co tử cung): <b>khởi phát</b> · <b>tăng co</b> · <b>BHSS do đờ TC</b> (sau sanh / sau mổ sanh)'],
+    ['⛔', 'CCĐ tuyệt đối: <b>suy thai cấp</b> · <b>bất xứng đầu chậu tuyệt đối</b>', { more: 'Mẹo: “<b>Con đang ngộp</b>” & “<b>Cửa quá hẹp</b>” — càng ép co càng hại: thai thiếu oxy thêm, tử cung vỡ.' }],
+    ['⚠️', 'Thận trọng: <b>sẹo mổ cũ</b> (nứt) · <b>đa sản</b> (vỡ TC) · <b>ngôi ngược</b> khi khởi phát (hại sơ sinh)', { more: 'Đa sản & sẹo mổ: <b>tuyệt đối không</b> dùng dung dịch nồng độ cao (Trạm 17).' }],
+    ['☠', 'Nguy hiểm nhất khi <b>thai còn trong buồng tử cung</b>'],
+  ],
 },
 
 /* ================= 7. LIỀU THẤP HAY LIỀU CAO ================= */
@@ -399,15 +413,18 @@ TRAM.push(
         <g class="dose-high"><line x1="50" y1="${SY(40)}" x2="510" y2="${SY(40)}" stroke="#e76f95" stroke-width="2" stroke-dasharray="6 5"/><text x="505" y="${SY(40) - 6}" text-anchor="end" font-size="12" font-weight="800" fill="#e76f95">trần cao</text>
           <path d="${high}" fill="none" stroke="#e76f95" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/><text x="${SX(2)}" y="${SY(6) - 8}" font-size="16">🐇</text></g>
       </svg></div>`,
-    `<div class="pills" style="justify-content:flex-start"><span class="pill c-pink">① TM thật chậm</span><span class="pill c-butter">② Liều thấp nhất</span><span class="pill c-sky">③ Theo dõi sát</span></div>
-      <div class="seg"><button class="btn on" type="button" data-m="low">🐢 Liều thấp</button><button class="btn" type="button" data-m="high">🐇 Liều cao</button></div>
-      <p class="key ev-low">🐢 Không tăng can thiệp ⇒ <b>VN dùng phổ biến</b></p>
-      <p class="key ev-high" style="background:var(--pink);border-color:var(--pink-d);box-shadow:0 4px 0 var(--pink-d)">🐇 Tăng <b>chuyển dạ cực nhanh</b></p>
-      ${tray(
-        stk('📌', '3 đặc điểm', '<p>Các phác đồ khác nhau ở: <b>liều khởi đầu</b>, <b>nhịp độ & biên độ tăng liều</b>, <b>liều tối đa</b>.</p><ul><li>🐢 <b>Liều thấp:</b> khởi đầu thấp, tăng chậm, tối đa thấp.</li><li>🐇 <b>Liều cao:</b> khởi đầu cao, tăng nhanh, tối đa cao.</li></ul><p class="small mut">Bậc thang trên hình chỉ minh họa hình dạng 2 nhóm.</p>', 'n', '3 đặc điểm phân nhóm phác đồ'),
-        stk('📚', '3 bằng chứng', '<ol><li>Phác đồ <b>liều thấp</b> không đi kèm tăng can thiệp trên cuộc sanh.</li><li>Chỉnh tăng liều với nhịp <b>&gt; 1 lần mỗi 30 phút</b> ⇒ rối loạn cơn co kiểu <b>cường tính</b>.</li><li>Phác đồ <b>liều cao</b> đi kèm tăng tần suất <b>chuyển dạ cực nhanh</b>.</li></ol><p>⇒ Tại Việt Nam, phác đồ phổ biến là <b>liều thấp</b>.</p>', 'y', 'Các cơ sở chứng cứ'),
-        stk('🏅', '3 nguyên tắc', '<p>Khởi phát chuyển dạ bằng oxytocin — buộc phải tuân thủ:</p><ol><li>Chỉ dùng <b>đường truyền tĩnh mạch thật chậm</b>.</li><li>Dùng <b>liều thấp nhất</b> có thể có hiệu quả.</li><li>Phải <b>theo dõi chặt chẽ</b> khi dùng oxytocin.</li></ol>', 'n', '3 nguyên tắc vàng'))}`);
+    `<div class="seg"><button class="btn on" type="button" data-m="low">🐢 Liều thấp</button><button class="btn" type="button" data-m="high">🐇 Liều cao</button></div>
+      <p class="hot-out ev-low">🐢 Khởi đầu thấp · tăng chậm · tối đa thấp ⇒ <b>không tăng can thiệp</b> ⇒ <b>Việt Nam dùng</b></p>
+      <p class="hot-out ev-high" style="background:var(--pink);border-color:var(--pink-d);box-shadow:0 5px 0 var(--pink-d)">🐇 Khởi đầu cao · tăng nhanh · tối đa cao ⇒ ↑ <b>chuyển dạ cực nhanh</b></p>`);
   },
+  how: ['Bấm <b>🐢 Thấp / 🐇 Cao</b> → bậc thang liều đổi', 'So: bậc đầu · độ dốc · trần', 'Bấm ô ①②③ → sáng đúng đường'],
+  notes: [
+    ['🏅', '3 nguyên tắc vàng khởi phát: <b>① TM thật chậm</b> · <b>② liều thấp nhất có hiệu quả</b> · <b>③ theo dõi chặt</b>'],
+    [1, 'Phác đồ khác nhau ở <b>liều khởi đầu · nhịp & biên độ tăng · liều tối đa</b>', { at: [[70, 180, 30], [275, 120, 70]], more: 'Bậc thang trên hình chỉ minh họa <b>hình dạng</b> 2 nhóm, không phải liều thật.' }],
+    [2, '🐢 <b>Liều thấp</b>: không tăng can thiệp trên cuộc sanh ⇒ <b>VN dùng phổ biến</b>', { at: [300, 160, 60], act: b => $('[data-m=low]', b).click() }],
+    [3, '🐇 <b>Liều cao</b>: ↑ tần suất <b>chuyển dạ cực nhanh</b>', { at: [170, 100, 72], act: b => $('[data-m=high]', b).click() }],
+    ['⏱', 'Chỉnh tăng liều <b>&gt; 1 lần / 30 phút</b> ⇒ cơn co <b>cường tính</b>'],
+  ],
   mount(root) {
     const sc = $('.scene', root); sc.dataset.mode = 'low';
     $$('[data-m]', sc).forEach(b => b.onclick = () => { sc.dataset.mode = b.dataset.m; $$('[data-m]', sc).forEach(x => x.classList.toggle('on', x === b)); Sfx.play('pop'); });
@@ -428,11 +445,16 @@ TRAM.push(
           <button type="button" data-i="1" data-fb="Chưa có đường truyền thì chỉnh giọt gì nè?">🎚️ Chỉnh giọt thấp nhất (VII giọt/ph)</button>
         </div>
         <p class="msg"></p>
-      </div>
-      ${key('🧴 Luôn bắt đầu bằng chai <b>KHÔNG</b> thuốc')}
-      ${tray(
-        stk('🔍', 'Vì sao chỉnh giọt trước?', '<p>Lúc mở khóa và chỉnh giọt, dịch thường chảy nhanh vài chục giây. Nếu chai đã có oxytocin ⇒ một lượng thuốc lớn vào máu như <b>tiêm bolus</b> ⇒ cơn co cường tính / tụt huyết áp. Chỉnh giọt bằng chai “trắng” trước thì không ai bị gì.</p><p>Bài giảng: <b>tôn trọng tuyệt đối đúng trình tự</b>; sau khi bắt đầu, <b>không được vội tăng liều</b>, cả về thời gian lẫn tốc độ.</p>', 'y'),
-        stk('🔌', 'Bơm tiêm điện', '<p>Khởi phát bằng bơm tiêm điện: bắt đầu <b>2 – 2,5 mIU/phút</b> (ống 5 IU pha đủ 50 mL = 100 mIU/mL ⇒ 1,2 – 1,5 mL/giờ — thử ở Trạm 9).</p><p>Oxytocin pha trong <b>dung dịch glucose 5%</b>, truyền bằng bơm tiêm điện hay nhỏ giọt tĩnh mạch.</p>', 'n', 'Nếu dùng bơm tiêm điện'))}`),
+      </div>`),
+  gate: true,
+  how: ['Bấm 4 thẻ theo <b>đúng thứ tự</b>', 'Đúng: chai dịch đổi + mở 1 ô ghi nhớ', 'Sai: đọc lý do, chọn lại'],
+  notes: [
+    [1, 'Lập đường truyền bằng <b>chai G5% 500 mL “trắng”</b> — <b>chưa có thuốc</b>', { at: [110, 95, 62] }],
+    [2, '<b>Chỉnh giọt thấp nhất: VII giọt/ph</b> trước', { at: [110, 214, 34], more: 'Lúc mở khóa, dịch chảy nhanh vài chục giây — nếu chai đã có thuốc ⇒ như <b>tiêm bolus</b> ⇒ cường tính / tụt HA.' }],
+    [3, 'Rồi mới <b>hòa 5 IU oxytocin</b> vào chai ⇒ VII giọt ≈ <b>3 mIU/ph</b>', { at: [178, 42, 34] }],
+    [4, '<b>Kiên nhẫn</b>: không vội tăng liều — cả <b>thời gian</b> lẫn <b>tốc độ</b>', { at: [184, 252, 30], more: 'Bài giảng: <b>tôn trọng tuyệt đối đúng trình tự</b>.' }],
+    ['🔌', 'Bơm tiêm điện: khởi đầu <b>2 – 2,5 mIU/ph</b> (5 IU/50 mL ⇒ <b>1,2 – 1,5 mL/h</b>)', { more: 'Thử ở Trạm 9 (🎛️ Mô phỏng).' }],
+  ],
   mount(root) {
     const svg = $('.bottle', root);
     root.addEventListener('ordered', e => {
@@ -463,6 +485,11 @@ TRAM.push(
         <span class="mk" style="left:50%"><span>20 rất cao</span></span>
         <span class="mk lo" style="left:80%"><span>32 thất bại</span></span>
         <span class="needle" id="needle"></span>
+      </div>
+      <div class="readout">
+        <div class="box c-pink"><div class="lbl">Liều</div><div class="big-num" id="oDose">3,5</div><div class="lbl">mIU/phút</div></div>
+        <div class="box c-butter"><div class="lbl">Tốc độ</div><div class="big-num" id="oRate">VII</div><div class="lbl" id="oRate2">giọt/phút</div></div>
+        <div class="box c-sky"><div class="lbl">Hết sau</div><div class="big-num" id="oTime">24 h</div><div class="lbl" id="oVol">500 mL</div></div>
       </div>`,
     `<div class="seg" id="dripMode">
         <button class="btn on" type="button" data-m="gio5">5 IU/500</button>
@@ -471,24 +498,23 @@ TRAM.push(
       </div>
       <div><div class="slider-lbl"><span id="rMin">0</span><span id="rUnit" class="hand" style="color:var(--ink);font-size:17px">giọt/phút</span><span id="rMax">80</span></div>
       <input type="range" id="dr" min="0" max="80" step="1" value="7" aria-label="Tốc độ truyền" style="margin:10px 0 0"></div>
-      <div class="readout">
-        <div class="box c-pink"><div class="lbl">Liều</div><div class="big-num" id="oDose">3,5</div><div class="lbl">mIU/phút</div></div>
-        <div class="box c-butter"><div class="lbl">Tốc độ</div><div class="big-num" id="oRate">VII</div><div class="lbl" id="oRate2">giọt/phút</div></div>
-        <div class="box c-sky"><div class="lbl">Hết sau</div><div class="big-num" id="oTime">24 h</div><div class="lbl" id="oVol">500 mL</div></div>
-      </div>
       <p class="hot-out" id="oMsg"></p>
-      <div class="warn warn-hi">CẤM ở <b>đa sản</b> & <b>sẹo mổ cũ</b>.</div>
-      <div class="row" id="presets"></div>
-      ${tray(
-        stk('🧮', 'Công thức đổi', '<p>Quy ước dịch truyền: <b>1 mL = 20 giọt</b>.</p><p><b>mIU/ph = (giọt/ph ÷ 20) × nồng độ (mIU/mL)</b><br><b>mIU/ph = (mL/giờ ÷ 60) × nồng độ (mIU/mL)</b></p><ul><li>5 IU/500 mL = 10 mIU/mL ⇒ <b>1 giọt/ph = 0,5 mIU/ph</b> (số giọt ÷ 2).</li><li>10 IU/500 mL = 20 mIU/mL ⇒ 1 giọt/ph = 1 mIU/ph.</li><li>5 IU/50 mL = 100 mIU/mL ⇒ 2,4 mL/h = 4 mIU/ph.</li></ul>', 'n', 'Công thức “vạn năng” đổi giọt ↔ mIU'),
-        stk('🎯', 'Các mốc', '<ul><li><b>2 – 2,5</b>: khởi đầu khởi phát bằng bơm tiêm.</li><li><b>≈ 3</b> (VII giọt): khởi đầu khởi phát nhỏ giọt.</li><li><b>4</b> (VIII giọt / 2,4 mL/h): khởi đầu tăng co.</li><li><b>12</b>: phần lớn trường hợp đã có cơn co hiệu quả.</li><li><b>20</b> (XL giọt): rất cao — liều tối đa tăng co; vượt phải cân nhắc kỹ, tăng nồng độ thay vì tăng giọt.</li><li><b>32</b>: không đáp ứng ⇒ khởi phát thất bại.</li><li>⚠️ 10 IU/500 mL (20 mIU/mL): <b>tuyệt đối không</b> dùng ở đa sản & sẹo mổ cũ lấy thai.</li></ul>', 'n', 'Các mốc trên thước liều'),
-        stk('🔍', 'VII giọt = 3 hay 3,5?', '<p>Theo quy đổi của chính bài giảng (1 giọt = 0,5 mIU), VII giọt = 3,5 mIU/ph; VI giọt = 3. Bài giảng làm tròn “tương đương 3 mIU/phút”. Đi thi nhớ cặp chuẩn: <b>khởi phát ≈ 3 mIU/ph (VII giọt)</b>, <b>tăng co 4 mIU/ph (VIII giọt)</b>.</p>', 'y'))}`),
+      <div class="warn warn-hi">CẤM ở <b>đa sản</b> & <b>sẹo mổ cũ</b>.</div>`),
+  how: ['Kéo thanh <b>tốc độ</b> → liều mIU/ph đổi ngay', 'Bấm ô ①–④ nhảy tới mốc liều', 'Đổi <b>10 IU/500</b> · <b>Bơm tiêm</b> để so'],
+  coach: '#dr',
+  notes: [
+    [1, '<b>VII giọt ≈ 3 mIU/ph</b> = khởi đầu <b>khởi phát</b>', { act: b => b.preset('gio5', 7), more: '5 IU/500 mL = 10 mIU/mL, <b>1 mL = 20 giọt</b> ⇒ <b>1 giọt/ph = 0,5 mIU/ph</b>. 🔍 Đúng ra VII giọt = 3,5 — bài giảng làm tròn “≈ 3”. Thi nhớ cặp: <b>VII ≈ 3</b> · <b>VIII = 4</b>.' }],
+    [2, '<b>VIII giọt = 4 mIU/ph</b> = khởi đầu <b>tăng co</b>', { act: b => b.preset('gio5', 8) }],
+    [3, '<b>XXIV = 12</b> thường đã đủ · <b>XL = 20</b> rất cao (max tăng co) · <b>LXIV = 32</b> khởi phát thất bại', { act: b => b.preset('gio5', 24), more: 'Công thức: <b>mIU/ph = giọt/ph ÷ 20 × nồng độ</b> (mIU/mL) — hoặc mL/giờ ÷ 60 × nồng độ.' }],
+    [4, 'Bơm tiêm 5 IU + 49 mL = <b>100 mIU/mL</b>: <b>2,4 mL/h = 4</b> (tăng co) · 1,2–1,5 mL/h = 2–2,5 (khởi phát)', { act: b => b.preset('bom', 2.4) }],
+    ['⚠️', '<b>10 IU/500 mL</b> (1 giọt = 1 mIU): <b>CẤM</b> ở đa sản & sẹo mổ cũ', { act: b => b.preset('gio10', 20) }],
+  ],
   mount(root) {
     const box = $('.scene', root), r = $('#dr', root), svg = $('#figDrip .bottle', root);
     const M = {
-      gio5: { conc: 10, max: 80, step: 1, vol: 500, def: 7, l1: '5 IU', l2: '/500 mL G5%', liq: '#ffc2d4', pre: [[7, 'VII'], [8, 'VIII'], [24, 'XXIV'], [40, 'XL'], [64, 'LXIV']] },
-      gio10: { conc: 20, max: 40, step: 1, vol: 500, def: 4, l1: '10 IU', l2: '/500 mL G5%', liq: '#ff8fa3', pre: [[12, 'XII'], [20, 'XX'], [32, 'XXXII']] },
-      bom: { conc: 100, max: 20, step: .1, vol: 50, def: 2.4, pre: [[1.2, '1,2'], [2.4, '2,4'], [7.2, '7,2'], [12, '12']] },
+      gio5: { conc: 10, max: 80, step: 1, vol: 500, def: 7, l1: '5 IU', l2: '/500 mL G5%', liq: '#ffc2d4' },
+      gio10: { conc: 20, max: 40, step: 1, vol: 500, def: 4, l1: '10 IU', l2: '/500 mL G5%', liq: '#ff8fa3' },
+      bom: { conc: 100, max: 20, step: .1, vol: 50, def: 2.4 },
     };
     let m = 'gio5';
     const isPump = () => m === 'bom';
@@ -523,12 +549,11 @@ TRAM.push(
       r.max = c.max; r.step = c.step; r.value = val ?? c.def;
       $('#rMax', root).textContent = c.max; $('#rUnit', root).textContent = isPump() ? 'mL/giờ' : 'giọt/phút';
       if (!isPump()) { $('#bL1', root).textContent = c.l1; $('#bL2', root).textContent = c.l2; $$('.liq', svg).forEach(x => x.style.fill = c.liq); }
-      $('#presets', root).innerHTML = c.pre.map(([v, t]) => `<button class="btn" type="button" data-v="${v}" style="min-height:46px;padding:4px 14px;font-size:15px">${t}</button>`).join('');
-      $$('#presets .btn', root).forEach(b => b.onclick = () => { r.value = b.dataset.v; fillRange(r); upd(); Sfx.play('drip'); });
       fillRange(r); upd();
     }
     $$('#dripMode .btn', root).forEach(b => b.onclick = () => { setMode(b.dataset.m); Sfx.play(b.dataset.m === 'gio10' ? 'buzz' : 'pop'); });
     r.oninput = upd;
+    root.preset = (k, v) => { setMode(k, v); Sfx.play('drip'); };
     setMode('gio5');
   },
 },
@@ -537,10 +562,16 @@ TRAM.push(
 {
   slug: 'leo-thang-moi-30-phut', part: 3, icon: '⏱️', title: 'Leo thang liều: mỗi 30 phút',
   lead: 'Bà trực sanh. Chị Lan, con so, 41 tuần, đang khởi phát bằng oxytocin.',
-  html: () => scene('', `<div class="scn-box" id="scn10"></div>
-    ${tray(
-      stk('📏', 'Luật tăng liều', '<ol><li>Cơn co chưa đạt <b>3 cơn/10 phút, mỗi cơn 40 giây</b> ⇒ tăng dần.</li><li><b>Mỗi lần tăng cách nhau 30 phút</b> — không bao giờ dày hơn.</li><li><b>Biên độ mỗi lần: 1,5 – 2,5 mIU</b>.</li><li>Đạt cơn co mong muốn ⇒ <b>duy trì ổn định tới khi sanh</b>.</li><li>Không vượt quá <b>3 – 4 cơn/10 phút</b>.</li><li>☠ Oxytocin rất nguy hiểm khi dùng liều cao. Phần lớn trường hợp ~12 mIU/ph đã hiệu quả.</li></ol>', 'n', 'Luật tăng liều khi khởi phát'),
-      stk('🔍', 'Vì sao 3 cơn × 40″?', '<p>Đủ để xóa mở cổ tử cung tiến triển mà vẫn chừa đủ <b>thời gian nghỉ giữa các cơn</b> để máu tưới lại hồ huyết nhau ⇒ thai không thiếu oxy. Cơn co càng dày/dài ⇒ nghỉ càng ngắn ⇒ nhịp giảm muộn.</p>', 'y', 'Vì sao mục tiêu là 3 cơn/10′, mỗi cơn 40″?'))}`),
+  html: () => scene('', `<div class="scn-box" id="scn10"></div>`),
+  gate: true,
+  how: ['Đọc băng CTG + tình huống', 'Chọn cách xử trí — sai thì đọc lý do', 'Đúng → mở 1 ô · <b>Tình huống tiếp ▶</b> (4 câu)'],
+  notes: [
+    ['⏱', 'Tăng liều cách nhau <b>≥ 30 phút</b> — không bao giờ dày hơn'],
+    ['➕', 'Chưa đạt mục tiêu ⇒ mỗi lần tăng <b>1,5 – 2,5 mIU/ph</b>'],
+    ['🎯', 'Mục tiêu <b>3 cơn/10′, mỗi cơn 40″</b> ⇒ <b>duy trì tới khi sanh</b>; không quá <b>3–4 cơn/10′</b>', { more: '🔍 Vì sao 3 × 40″? Đủ để CTC xóa mở mà vẫn chừa <b>thời gian nghỉ</b> cho máu tưới hồ huyết nhau ⇒ thai không thiếu oxy.' }],
+    ['⛔', 'Cường tính ⇒ <b>cắt hẳn oxytocin</b> (không giảm nửa vời), tìm <b>nguyên nhân thực thể</b>'],
+    ['☠', 'Phần lớn ca <b>~12 mIU/ph</b> đã hiệu quả — liều cao rất nguy hiểm'],
+  ],
   mount(root) {
     scenario($('.viz', root), $('#scn10', root), [
       { meta: clk('15 phút') + dz('3 mIU/ph · VII giọt'), vis: ctg({ freq: 1, dur: 22 }),
@@ -592,11 +623,14 @@ TRAM.push(
         <button class="btn btn-sky" type="button" id="stopA">🍶 Hết chai 5 IU, chưa có cơn co</button>
         <button class="btn btn-pink" type="button" id="stopB">🏁 Chạm 32 mIU/ph, vẫn không chuyển dạ</button>
       </div>
-      <p class="hot-out" id="stopOut">👆 Thử từng tình huống.</p>
-      ${tray(
-        stk('📌', 'Hai vạch dừng', '<ol><li>Đã truyền hết <b>5.000 mIU</b> (5 IU trong 500 mL) mà chưa tạo được cơn co cần thiết ⇒ <b>tạm ngưng</b>, thực hiện lại <b>vào ngày hôm sau</b>.</li><li>Đã đến giới hạn <b>32 mIU/phút</b> mà vẫn không khởi phát được ⇒ <b>khởi phát chuyển dạ thất bại</b>.</li></ol><p>Vài phác đồ thử tốc độ cao hơn, nhưng <b>không có bằng chứng</b> tăng liều thêm làm khởi phát thành công.</p>', 'n', 'Khởi phát thất bại'),
-        stk('🔍', 'Qua vạch 20?', '<p>20 mIU/ph (XL giọt) đã là tốc độ <b>rất cao</b>. Nếu vẫn chưa đạt cơn co, có thể xem xét <b>tăng nồng độ oxytocin trong dịch truyền</b> — để <b>giảm thể tích dịch</b> và <b>dễ điều chỉnh liều</b>. Quyết định vượt 20 mIU/ph phải được <b>cân nhắc kỹ</b> (và cấm nồng độ cao ở đa sản / sẹo mổ cũ).</p>', 'y', 'Trước khi chạm 32: qua 20 mIU/ph phải làm gì?'))}`);
+      <p class="hot-out" id="stopOut">👆 Thử từng tình huống.</p>`);
   },
+  how: ['Bấm <b>🍶 hết chai</b> / <b>🏁 chạm 32</b>', 'Xem chai cạn hoặc kim vọt vạch đỏ', 'Bấm ô ①②③ ôn lại'],
+  notes: [
+    [1, 'Truyền hết <b>5 IU (5.000 mIU)</b> chưa có cơn co ⇒ <b>tạm ngưng, làm lại hôm sau</b>', { at: [60, 100, 58], act: b => $('#stopA', b).click() }],
+    [2, '<b>20 mIU/ph</b> đã rất cao ⇒ cân nhắc kỹ, có thể <b>tăng nồng độ</b> (giảm dịch, dễ chỉnh)', { at: [322, 68, 28], more: 'Nồng độ cao <b>cấm</b> ở đa sản & sẹo mổ cũ (Trạm 17).' }],
+    [3, 'Tới <b>32 mIU/ph</b> vẫn không chuyển dạ ⇒ <b>khởi phát thất bại</b>', { at: [390, 160, 30], act: b => $('#stopB', b).click(), more: 'Vài phác đồ thử cao hơn nhưng <b>không có bằng chứng</b> tăng thêm giúp thành công.' }],
+  ],
   mount(root) {
     const out = $('#stopOut', root), lvl = $('#bLvl', root), nd = $('#gNeedle', root);
     $('#stopA', root).onclick = () => { lvl.setAttribute('y', 162); lvl.setAttribute('height', 3); nd.style.transform = `rotate(${12 / 32 * 180}deg)`; out.innerHTML = '🍶 Hết 5.000 mIU ⇒ <b>tạm ngưng, mai làm lại</b>.'; Sfx.play('drip'); };
@@ -624,7 +658,7 @@ TRAM.push(
           ${ping(300, 150, 14)}
         </g>
         <text x="300" y="236" text-anchor="middle" font-size="13" font-weight="900" fill="${INK}">↺ nghiêng TRÁI</text>
-        <g ${tip('Mạch & huyết áp|Theo dõi mạch, huyết áp trong suốt quá trình khởi phát chuyển dạ.', 'ha')}><rect x="172" y="176" width="26" height="16" rx="4" fill="#b2f2bb" stroke="${INK}" stroke-width="3"/>${ping(185, 184)}</g>
+        <g ${tip('Mạch & huyết áp|Theo dõi mạch, huyết áp trong suốt quá trình khởi phát chuyển dạ.', 'ha')}><rect x="164" y="168" width="42" height="32" fill="transparent"/><rect x="172" y="176" width="26" height="16" rx="4" fill="#b2f2bb" stroke="${INK}" stroke-width="3"/>${ping(185, 184)}</g>
         <g ${tip('Monitor sản khoa (EFM/CTG)|Cơn gò tử cung và tim thai phải được theo dõi chặt chẽ, bằng monitor sản khoa nếu được.', 'ctg')}>
           <path d="M250 136 C270 128 300 128 318 136" stroke="#74c0fc" stroke-width="7" fill="none" stroke-linecap="round"/>
           <rect x="372" y="20" width="136" height="96" rx="12" fill="${INK}" stroke="${INK}" stroke-width="3"/>
@@ -642,12 +676,17 @@ TRAM.push(
         <g ${tip('Người theo dõi|Tuyệt đối KHÔNG được để sản phụ đang dùng oxytocin ở một mình mà không theo dõi.', 'ng')}><text x="478" y="200" text-anchor="middle" font-size="46">🧑‍⚕️</text>${ping(478, 186, 18)}</g>
         <g ${tip('Đường truyền oxytocin|Chỉ truyền tĩnh mạch thật chậm, bằng bơm tiêm điện hay nhỏ giọt; liều thấp nhất có hiệu quả.', 'iv')}><rect x="32" y="32" width="32" height="48" rx="8" fill="transparent"/>${ping(48, 56)}</g>
       </svg></div>`,
-    `<div class="hot-out"></div>
-      ${key('🎯 <b>3 cơn/10′ × 40″</b> · 🚫 không quá <b>3–4 cơn/10′</b>')}
-      ${tray(
-        stk('🎮', 'Đếm cơn co', quiz('Băng CTG này có mấy cơn co trong 10 phút?' + ctg({ freq: 3, dur: 40 }), [['2 cơn', false, 'Đếm lại các “đồi” ở đường dưới nhé.'], ['3 cơn', true, '3 cơn/10′, mỗi cơn ~40″ ⇒ đúng mục tiêu, duy trì!'], ['5 cơn', false, 'Nhiều vậy là cường tính rồi!']]), 'o', 'Thử đếm cơn co'),
-        stk('🚨', 'Khi nào ngưng', '<p><b>Giảm hay ngưng truyền oxytocin ngay</b> nếu rối loạn cơn co, có hoặc không kèm bất thường tim thai (<b>&lt; 100 lần/phút</b> qua ống nghe hoặc <b>nhịp giảm đe dọa thai</b> trên EFM).</p><p>Ngưng rồi vẫn không giải quyết ⇒ tìm <b>nguyên nhân thực thể</b>; không do thực thể ⇒ dùng <b>giảm co</b>.</p><p>☠ Tuyệt đối không để sản phụ đang dùng oxytocin ở một mình.</p>', 'w', 'Giảm hay ngưng truyền NGAY khi'),
-        stk('🔍', 'Giảm hay cắt hẳn?', '<p>Phần theo dõi khởi phát ghi “giảm hay ngưng truyền oxytocin ngay”. Nhưng mục <b>xử trí rối loạn cơn co</b> nhấn mạnh: <b>không xử trí nửa vời bằng cách giảm liều — phải cắt hẳn oxytocin và chờ đáp ứng</b>. Đề cho cơn co cường tính ⇒ chọn <b>cắt hẳn</b> (Trạm 16).</p>', 'y', 'Bài giảng nói 2 kiểu!'))}`, 'hot',
-    [['tu', '🛏️ Sản phụ phải nằm tư thế nào? Chạm vào chị ấy.'], ['ctg', '📈 Theo dõi cơn gò & tim thai bằng máy nào?'], ['sd', '📝 Mỗi 30 phút ghi chép vào đâu?'], ['ha', '🩺 Dấu hiệu sinh tồn nào phải theo dõi?'], ['iv', '💧 Oxytocin vào người bằng đường nào?'], ['ng', '🙅 Điều TUYỆT ĐỐI không được làm là gì?']]),
+    `<div class="hot-out"></div>`, 'hot',
+    [['tu', '🛏️ Sản phụ phải nằm tư thế nào? Chạm vào chị ấy.'], ['ctg', '📈 Theo dõi cơn gò & tim thai bằng máy nào?'], ['sd', '📝 Mỗi 30 phút ghi chép vào đâu?'], ['ha', '🩺 Dấu hiệu sinh tồn nào phải theo dõi? (chạm vòng bít HA)'], ['iv', '💧 Oxytocin vào người bằng đường nào?'], ['ng', '🙅 Điều TUYỆT ĐỐI không được làm là gì?']]),
+  gate: true,
+  how: ['Đọc 🎯 nhiệm vụ → chạm đúng chỗ trên giường sanh', 'Đúng → mở 1 ô', 'Xong 6 nhiệm vụ → <b>▶ Tự chạy</b> ôn'],
+  notes: [
+    [1, 'Sản phụ nằm <b>nghiêng TRÁI</b> — giải phóng tĩnh mạch chủ dưới', { at: [250, 175, 72] }],
+    [2, '<b>Monitor sản khoa</b>: cơn gò + tim thai, theo dõi chặt', { at: [440, 68, 62], more: '🚨 <b>Giảm/ngưng ngay</b> nếu rối loạn cơn co ± tim thai bất thường (<b>&lt; 100 l/ph</b> hoặc nhịp giảm đe dọa trên EFM). Ngưng không hết ⇒ tìm <b>thực thể</b>; không thực thể ⇒ <b>giảm co</b>. 🔍 Đề cho <b>cường tính</b> ⇒ chọn <b>cắt hẳn</b> (Trạm 16).' }],
+    [3, '<b>Sản đồ mỗi 30′</b>: số cơn co/10′ + tim thai <b>ngay sau cơn gò</b>', { at: [268, 62, 48], more: '🎯 Mục tiêu <b>3 cơn/10′ × 40″</b>, không quá <b>3–4 cơn/10′</b>.' }],
+    [4, 'Theo dõi <b>mạch, huyết áp</b> suốt quá trình', { at: [185, 184, 22] }],
+    [5, 'Oxytocin: <b>TTM thật chậm</b>, liều <b>thấp nhất</b> có hiệu quả', { at: [48, 56, 32] }],
+    [6, '☠ <b>Không bao giờ</b> để sản phụ đang truyền oxytocin <b>ở một mình</b>', { at: [478, 186, 30] }],
+  ],
 },
 );

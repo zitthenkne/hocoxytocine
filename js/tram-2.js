@@ -1,7 +1,7 @@
 /* zitthenk học Oxytocin — Trạm 13 → 25 */
 'use strict';
 
-/* Tử cung có vòng Bandl (popup trạm 15) */
+/* Tử cung có vòng Bandl (trạm 15, 16) */
 const bandlSVG = () => `<svg viewBox="0 0 280 300" role="img" aria-label="Hội chứng vượt trở ngại: vòng Bandl và dây chằng tròn căng">
   <g ${tip('Dây chằng tròn căng (dấu Frommel)|Hai dây chằng tròn căng cứng như dây đàn, sờ được — dấu hiệu của hội chứng vượt trở ngại (dọa vỡ tử cung).')}>
     <path d="M70 70 L14 150" stroke="#e76f95" stroke-width="6" stroke-linecap="round"/><path d="M210 70 L266 150" stroke="#e76f95" stroke-width="6" stroke-linecap="round"/>${ping(30, 128)}</g>
@@ -52,17 +52,15 @@ TRAM.push(
         <button class="btn btn-mint" type="button" id="keep">✅ Đã hiệu quả</button>
         <button class="btn" type="button" id="rst" style="flex:0 0 auto">↺</button>
       </div>
-      <p class="hot-out" id="ladOut">Bắt đầu ở <b>4 mIU/phút</b>. Chỉ tăng <b>khi và chỉ khi</b> cơn co chưa hiệu quả.</p>
-      <div class="minis">
-        <div class="mini c-sky"><b>🧴 VIII giọt</b><span>5 IU/500 mL G5% = 4 mIU/ph</span></div>
-        <div class="mini c-lav"><b>🔌 2,4 mL/h</b><span>5 IU + 49 mL G5%</span></div>
-      </div>
-      ${tray(
-        stk('☠', '2 điều cấm', '<ul><li>Ngoài <b>oxytocin</b>, không được tăng co bằng <b>bất cứ oxytocics nào khác</b>.</li><li>Ngoài đường <b>truyền tĩnh mạch chậm</b>, không được tăng co bằng oxytocin qua <b>bất cứ đường nào khác</b>.</li></ul>', 'w', '2 điều cấm khi tăng co'),
-        stk('📌', 'Định nghĩa', '<p><b>Tăng co</b> là dùng thuốc điều chỉnh cơn co tử cung <b>tự nhiên</b>, nhằm đạt cơn co thích hợp với giai đoạn chuyển dạ về <b>cường độ, biên độ, tần số</b> để cổ tử cung và ngôi thai diễn tiến thuận lợi.</p>', 'n', 'Tăng co là gì?'),
-        stk('🧴', '2 cách pha', '<ul><li><b>Nhỏ giọt TM:</b> 5 IU oxytocin / 500 mL Glucose 5%; khởi đầu <b>4 mIU/phút (VIII giọt)</b>. ⚠️ Chỉnh số giọt <i>trước khi</i> pha oxytocin vào chai. <b>1 giọt/ph = 0,5 mIU/ph</b>.</li><li><b>Bơm tiêm tự động:</b> 5 IU + <b>49 mL</b> Glucose 5%, tốc độ <b>2,4 mL/giờ</b>. Ưu điểm: <b>giảm thể tích dịch truyền</b> kèm theo oxytocin + <b>kiểm soát tốt tốc độ</b>.</li></ul>', 'n', '2 cách dùng khi tăng co'),
-        stk('👀', 'Theo dõi', '<ul><li>Lý tưởng bằng <b>monitoring</b>; mỗi <b>15 – 20 phút</b> đánh giá lại cơn co: cường độ, tần số, thời gian.</li><li>Chỉ tăng liều <b>khi và chỉ khi</b> cơn co chưa đạt hiệu quả; mỗi lần <b>+4 mIU/phút</b>.</li><li>☠ <b>Liều tối đa 20 mIU/phút</b>; tăng quá phải cân nhắc kỹ; vượt ⇒ <b>tăng nồng độ oxytocin trong chai và chỉnh lại tốc độ từ đầu</b>.</li><li>Hiệu quả = đặc tính cơn co + <b>xóa mở CTC</b> + <b>diễn tiến ngôi</b>. Ghi sản đồ <b>mỗi 1 – 2 giờ</b>.</li><li>Đã hiệu quả ⇒ duy trì ở <b>mức thấp nhất</b> vừa đủ để cuộc sanh tiến triển.</li></ul>', 'n', 'Theo dõi nghiêm ngặt cơn co & tim thai'))}`);
+      <p class="hot-out" id="ladOut">Bắt đầu ở <b>4 mIU/phút</b>. Chỉ tăng <b>khi và chỉ khi</b> cơn co chưa hiệu quả.</p>`);
   },
+  how: ['Bấm <b>⬆️ +1 bậc</b> — giọt nước leo thang', 'Tới MAX thử bấm thêm', '<b>✅ Đã hiệu quả</b> thì làm gì?'],
+  notes: [
+    [1, 'Khởi đầu <b>4 mIU/ph</b> = <b>VIII giọt</b> (5 IU/500 mL G5%) · bơm tiêm <b>5 IU + 49 mL, 2,4 mL/h</b>', { at: [130, 250, 42], more: 'Chỉnh giọt <i>trước khi</i> pha oxytocin vào chai. Bơm tiêm ưu điểm: <b>giảm thể tích dịch</b> + <b>kiểm soát tốc độ</b> tốt.' }],
+    [2, 'Mỗi <b>15–20′</b> đánh giá; chưa hiệu quả mới <b>+4 mIU/ph</b>', { at: [130, 175, 52], more: 'Hiệu quả = đặc tính cơn co + <b>xóa mở CTC</b> + <b>diễn tiến ngôi</b>. Ghi sản đồ <b>mỗi 1–2 giờ</b>. Đạt rồi ⇒ giữ <b>mức thấp nhất</b> vừa đủ.' }],
+    [3, '<b>Tối đa 20 mIU/ph</b> · vượt ⇒ <b>tăng nồng độ</b> trong chai, <b>chỉnh lại tốc độ từ đầu</b>', { at: [130, 36, 36] }],
+    ['☠', 'Tăng co: <b>chỉ oxytocin</b> (không oxytocics khác) · <b>chỉ TTM chậm</b> (không đường khác)', { more: '<b>Tăng co</b> = điều chỉnh cơn co <b>tự nhiên</b> đã có cho đạt cường độ, biên độ, tần số hợp với giai đoạn chuyển dạ.' }],
+  ],
   mount(root) {
     const Y = { 4: 250, 8: 200, 12: 150, 16: 100, 20: 50 }; let d = 4;
     const cl = $('#climber', root), out = $('#ladOut', root);
@@ -82,20 +80,23 @@ TRAM.push(
 {
   slug: 'khoi-phat-vs-tang-co', part: 4, icon: '👯', title: 'Khởi phát vs tăng co',
   lead: 'Giống nhau 80% — đề thi nằm ở 20% còn lại. Chạm ô ❓ để lật.',
-  html: () => scene(`<div class="duel">
+  html: () => scene(`${vtabs(['duel', '👯 Từng cặp'], ['bang', '📋 Cả bảng'])}<div class="duel pane on" data-pane="duel">
       <div class="duel-h" id="duelH"></div>
       <div class="duel-row">
         <div class="duel-card c-butter"><h4>🧨 Khởi phát</h4><span class="rv" id="duelA" tabindex="0" role="button"></span></div>
         <div class="duel-card c-mint"><h4>🚀 Tăng co</h4><span class="rv" id="duelB" tabindex="0" role="button"></span></div>
       </div>
       <div class="dots" id="duelDots">${DUEL.map(() => '<i></i>').join('')}</div>
-    </div>`,
+    </div>
+    <div class="pane tbl" data-pane="bang"><table><tr><th></th><th>🧨 Khởi phát</th><th>🚀 Tăng co</th></tr>${DUEL.map(([h, a, b]) => `<tr><th>${h}</th><td>${a}</td><td>${b}</td></tr>`).join('')}</table></div>`,
     `<div class="seg"><button class="btn btn-lav" type="button" id="dPrev">◀ Cặp trước</button><button class="btn btn-go" type="button" id="dNext">Cặp sau ▶</button></div>
-    <button class="btn" type="button" id="dFlip">👀 Lật cả 2 ô</button>
-    ${key('🔑 Điểm chung: TM chậm · chai 5 IU/500 mL G5% · liều thấp nhất · rối loạn ⇒ cắt hẳn')}
-    ${tray(
-      stk('🧠', 'Mẹo nhớ mã số', '<p>🧨 <b>Khởi phát = 3 · 2 · 30 · 32</b> → khởi 3 mIU, mỗi lần +~2, cách 30 phút, 32 là vạch thất bại.</p><p>🚀 <b>Tăng co = 4 · 4 · 20</b> → khởi 4 mIU, mỗi lần +4, trần 20.</p>', 'y', 'Mẹo nhớ bằng 2 “mã số”'),
-      stk('📋', 'Cả bảng', `<table style="width:100%;border-collapse:collapse;font-size:15px">${DUEL.map(([h, a, b]) => `<tr><th style="text-align:left;padding:6px 4px;border-bottom:1px dashed #d3c3ee">${h}</th><td style="padding:6px 4px;border-bottom:1px dashed #d3c3ee">${a}</td><td style="padding:6px 4px;border-bottom:1px dashed #d3c3ee">${b}</td></tr>`).join('')}</table>`, 'n', 'Khởi phát vs tăng co — cả bảng'))}`),
+    <button class="btn" type="button" id="dFlip">👀 Lật cả 2 ô</button>`),
+  how: ['Đoán trong đầu 2 ô ❓', 'Chạm ô ❓ để lật', '<b>Cặp sau ▶</b> đủ 8 cặp · <b>📋 Cả bảng</b> ôn'],
+  coach: '.duel-row',
+  notes: [
+    ['🧠', 'Mã số: 🧨 <b>Khởi phát = 3 · 2 · 30 · 32</b> · 🚀 <b>Tăng co = 4 · 4 · 20</b>', { more: 'Khởi phát: khởi 3 mIU, mỗi lần +~2, cách 30 phút, 32 là vạch thất bại. Tăng co: khởi 4 mIU, mỗi lần +4, trần 20.' }],
+    ['🔑', 'Điểm chung: <b>TM chậm</b> · chai <b>5 IU/500 mL G5%</b> · <b>liều thấp nhất</b> · rối loạn ⇒ <b>cắt hẳn</b>'],
+  ],
   mount(root) {
     let i = 0;
     const A = $('#duelA', root), B = $('#duelB', root), dots = $$('#duelDots i', root);
@@ -116,18 +117,23 @@ TRAM.push(
 {
   slug: 'con-co-cuong-tinh', part: 5, icon: '🚨', title: 'Còi báo động: cơn co cường tính',
   lead: 'Kéo liều lên — xem băng CTG “nổi giận”.',
-  html: () => scene(`<div id="tdCtg"></div>`,
+  html: () => scene(`${vtabs(['ctg', '📈 Băng CTG'], ['bandl', '🔎 Vòng Bandl'])}<div class="pane on" data-pane="ctg" id="tdCtg" style="flex-direction:column;justify-content:center"></div>
+    <div class="fig pane hot hot-pane" data-pane="bandl">${bandlSVG()}<p class="hot-out">👆 Chạm từng phần của tử cung.</p></div>`,
     `<div class="row" style="justify-content:space-between;flex-wrap:nowrap">
         <span class="hand" style="font-size:22px">💧 <b id="tdDose">12</b> mIU/phút</span>
         <svg viewBox="0 0 60 60" width="50" height="50" aria-label="Đèn báo"><circle class="alarm" id="lamp" cx="30" cy="30" r="22" fill="#cdeedd" stroke="${INK}" stroke-width="3"/><text x="30" y="37" text-anchor="middle" font-size="20">🚨</text></svg>
       </div>
       <input type="range" id="td" min="0" max="32" step="1" value="12" aria-label="Liều oxytocin minh họa" style="margin:4px 0 0">
-      <p class="hot-out" id="tdOut"></p>
-      ${key('🚨 Cường tính = cơn <b>&gt; 60″</b> hoặc <b>&gt; 4 cơn/10′</b>')}
-      ${tray(
-        stk('🔎', 'Vòng Bandl', `<div class="hot">${bandlSVG()}<p class="hot-out" style="margin-top:10px">👆 Chạm từng phần của tử cung.</p></div>`, 'o', 'Hội chứng vượt trở ngại (Bandl – Frommel)'),
-        stk('📌', 'Hỏi gì trước?', '<p>Biến chứng nặng khi truyền oxytocin: <b>suy thai, rối loạn cơn co cường tính, vỡ tử cung</b>.</p><p>Tử cung tăng kích thích (cơn co &gt; 60 giây, hay &gt; 4 cơn/10 phút) ⇒ trước hết xác định <b>có hay không nguyên nhân thực thể</b> — thường nhất là <b>bất xứng đầu chậu</b> và <b>hội chứng vượt trở ngại</b>. Có ⇒ <b>buộc phải chấm dứt ngay chuyển dạ</b>.</p><p>Chỉ xác định là do oxytocin <b>sau khi đã loại</b> nguyên nhân thực thể.</p>', 'n', 'Trước hết: nguyên nhân thực thể'),
-        stk('✨', 'Định nghĩa ACOG', '<p>ACOG: tachysystole = <b>&gt; 5 cơn co / 10 phút, trung bình trong 30 phút</b>. Bài giảng dùng ngưỡng thực hành chặt hơn: cơn &gt; 60 giây hoặc &gt; 4 cơn/10 phút. Đi thi trường mình ⇒ dùng ngưỡng bài giảng.</p>', 'x', 'Định nghĩa “tachysystole” quốc tế'))}`),
+      <p class="hot-out" id="tdOut"></p>`),
+  how: ['Kéo thanh liều <b>0 → 32 mIU/ph</b>', 'CTG: cơn co dày, tim thai tụt → đèn 🚨', '<b>🔎 Vòng Bandl</b>: chạm từng phần'],
+  coach: '#td',
+  notes: [
+    ['🚨', 'Cường tính = cơn <b>&gt; 60″</b> hoặc <b>&gt; 4 cơn/10′</b>', { more: `${X} ACOG: tachysystole = <b>&gt; 5 cơn/10′</b> trung bình trong 30′. Thi trường mình dùng ngưỡng bài giảng.` }],
+    ['☠', 'Biến chứng nặng: <b>suy thai · cường tính · vỡ tử cung</b>'],
+    [1, 'Trước hết tìm <b>thực thể</b>: <b>bất xứng đầu chậu</b>, <b>vượt trở ngại</b> ⇒ có ⇒ <b>chấm dứt chuyển dạ ngay</b>', { fig: '[data-pane=bandl] svg', at: [140, 214, 42] }],
+    [2, 'Dọa vỡ TC: <b>vòng Bandl</b> lên cao (bầu nậm) + <b>dây chằng tròn căng</b> (Frommel)', { fig: '[data-pane=bandl] svg', at: [[140, 150, 44], [42, 110, 24], [238, 110, 24]] }],
+    ['⚖️', 'Chỉ quy cho oxytocin <b>sau khi đã loại</b> nguyên nhân thực thể'],
+  ],
   mount(root) {
     const r = $('#td', root), box = $('#tdCtg', root), out = $('#tdOut', root), lamp = $('#lamp', root);
     let lastBad = false;
@@ -147,11 +153,16 @@ TRAM.push(
 {
   slug: 'xu-tri-roi-loan-con-co', part: 5, icon: '🧯', title: 'Xử trí rối loạn cơn co',
   lead: 'Chọn đúng từng bước — không nửa vời.',
-  html: () => scene('', `<div class="scn-box" id="scn16"></div>
-    ${tray(
-      stk('🧭', 'Lưu đồ 5 bước', '<ol><li>Cơn co cường tính + EFM đe dọa thai ⇒ <b>bắt buộc</b> xác nhận / loại trừ <b>bất xứng đầu chậu</b>.</li><li>Có nguyên nhân thực thể ⇒ <b>chấm dứt ngay chuyển dạ</b>.</li><li>Chỉ quy cho oxytocin <b>sau khi đã loại</b> nguyên nhân thực thể ⇒ <b>cắt hẳn oxytocin</b>, chờ đáp ứng (hết sau vài phút).</li><li>Không mất sau ngưng + đã loại thực thể ⇒ <b>giảm co</b>: Salbutamol 10 mg / 1000 mL NaCl 0,9% hay Lactated Ringer’s, TTM <b>X giọt/phút</b>.</li><li>Hồi phục nhanh ⇒ có thể tăng co lại, nhưng <b>bắt đầu lại từ đầu</b> + monitoring nghiêm ngặt.</li></ol>', 'n', 'Lưu đồ xử trí'),
-      stk('☠', 'Không nửa vời', '<p>Khi có rối loạn cơn co, <b>không</b> xử trí nửa vời bằng giảm liều oxytocin — phải <b>cắt hẳn</b> oxytocin và chờ đáp ứng.</p>', 'w'),
-      stk('🔍', 'Salbutamol = ? µg', '<p>10 mg / 1000 mL = <b>10 µg/mL</b>. X giọt/ph ÷ 20 = <b>0,5 mL/ph</b> ⇒ <b>5 µg/phút</b>. Salbutamol là chất đồng vận β₂ ⇒ giãn cơ trơn tử cung (chú ý nhịp nhanh mẹ).</p>', 'y', 'Salbutamol X giọt/phút là bao nhiêu µg?'))}`),
+  html: () => scene('', `<div class="scn-box" id="scn16"></div>`),
+  gate: true,
+  how: ['Đọc hình + tình huống', 'Chọn bước xử trí — sai thì đọc lý do', '5 tình huống = 5 bước lưu đồ (mở dần ①–⑤)'],
+  notes: [
+    [1, 'Cường tính + EFM đe dọa ⇒ <b>bắt buộc loại bất xứng đầu chậu / vượt trở ngại</b>'],
+    [2, 'Có nguyên nhân thực thể ⇒ <b>chấm dứt chuyển dạ ngay</b>'],
+    [3, 'Không thực thể ⇒ <b>cắt hẳn oxytocin</b>, chờ vài phút — <b>không giảm nửa vời</b>'],
+    [4, 'Ngưng vẫn cường tính ⇒ giảm co: <b>Salbutamol 10 mg/1000 mL</b> NaCl 0,9% / Lactated Ringer’s, <b>X giọt/ph</b>', { more: '🔍 10 mg/1000 mL = 10 µg/mL; X giọt/ph = 0,5 mL/ph ⇒ <b>≈ 5 µg/ph</b>. Đồng vận β₂ ⇒ giãn cơ tử cung (chú ý mạch nhanh mẹ).' }],
+    [5, 'Hồi phục ⇒ tăng co lại <b>bắt đầu TỪ ĐẦU</b> + monitoring nghiêm ngặt'],
+  ],
   mount(root) {
     scenario($('.viz', root), $('#scn16', root), [
       { meta: dz('16 mIU/ph · đang tăng co'), vis: ctg({ freq: 5, dur: 65, decel: true, base: 132 }),
@@ -201,11 +212,15 @@ TRAM.push(
         <button class="btn btn-sky" type="button" data-c="5">🧴 5 IU/500 mL</button>
         <button class="btn btn-pink" type="button" data-c="10">⚠️ 10 IU/500 mL</button>
       </div>
-      <p class="hot-out" id="concOut">👆 Chọn sản phụ rồi chọn cách pha.</p>
-      ${key('⛔ Đa sản / sẹo mổ: <b>CẤM</b> pha 10 IU/500 mL (20 mIU/mL)')}
-      ${tray(
-        stk('🔗', 'Nhắc chéo PG', '<p>Oxytocin dễ gây <b>vỡ tử cung</b> ở người <b>đa sản</b> và phụ nữ có <b>sẹo mổ cũ lấy thai</b>.</p><p>Tử cung có sẹo mổ cũ còn là <b>chống chỉ định tuyệt đối của prostaglandin</b> (Trạm 21).</p>', 'n', 'Vỡ tử cung & nhắc chéo'),
-        stk('✨', 'Biến chứng thầm lặng', '<ul><li><b>Ngộ độc nước:</b> tác dụng giống ADH khi liều cao (≥ 20 mIU/ph) + nhiều dịch không điện giải ⇒ hạ Na máu, co giật (Trạm 2).</li><li><b>Tụt huyết áp</b> khi tiêm TM nhanh (bolus) do giãn mạch ⇒ vì vậy WHO ghi chống chỉ định “<b>tiêm tĩnh mạch trực tiếp</b>” (Trạm 18).</li></ul>', 'x', '2 biến chứng “thầm lặng” khác'))}`),
+      <p class="hot-out" id="concOut">👆 Chọn sản phụ rồi chọn cách pha.</p>`),
+  how: ['Chọn sản phụ: <b>Con so / Đa sản / Sẹo mổ</b>', 'Chọn chai <b>5 IU</b> hay <b>10 IU</b>', 'Xem tử cung ra sao'],
+  notes: [
+    [1, '<b>Đa sản</b>: thành tử cung giãn mỏng ⇒ dễ <b>vỡ tử cung</b>', { at: [110, 100, 70], act: b => $('[data-p=ds]', b).click() }],
+    [2, '<b>Sẹo mổ cũ</b> lấy thai ⇒ <b>nứt vết mổ</b> / vỡ', { at: [110, 146, 50], act: b => $('[data-p=seo]', b).click() }],
+    ['⛔', 'Đa sản / sẹo mổ: <b>CẤM</b> pha <b>10 IU/500 mL</b> (20 mIU/mL)'],
+    ['🔗', 'Sẹo mổ cũ còn là <b>CCĐ tuyệt đối của prostaglandin</b> (Trạm 21)'],
+    ['✨', '2 biến chứng thầm lặng: <b>ngộ độc nước</b> · <b>tụt HA</b> khi tiêm TM nhanh', { more: `${X} Ngộ độc nước: liều cao (≥ 20 mIU/ph) + nhiều dịch không điện giải ⇒ hạ Na, co giật (Trạm 2). Tụt HA khi bolus do giãn mạch ⇒ WHO ghi CCĐ <b>tiêm TM trực tiếp</b> (Trạm 18).` }],
+  ],
   mount(root) {
     let p = 'cs';
     const fig = $('#utFig', root), out = $('#concOut', root);
@@ -236,30 +251,33 @@ TRAM.push(
       ['er', '🪨 Ergometrine', 'c-butter', '<dl class="cheat-dl"><dt>Liều đầu</dt><dd>TB hay TM chậm <b>0,2 mg</b></dd><dt>Tiếp theo</dt><dd><b>0,2 mg TB sau 15′</b>; cần thì 0,2 mg <b>mỗi 4 giờ</b></dd><dt>Tối đa</dt><dd><b>5 liều</b> (1,0 mg)</dd><dt>CCĐ</dt><dd><b>TSG, THA, bệnh tim mạch</b></dd></dl>'],
       ['pg', '🧪 15-methyl PGF2α', 'c-peach', '<dl class="cheat-dl"><dt>Liều đầu</dt><dd><b>TB 0,25 mg</b></dd><dt>Tiếp theo</dt><dd>0,25 mg <b>mỗi 15 phút</b></dd><dt>Tối đa</dt><dd><b>8 liều</b> (2 mg)</dd><dt>CCĐ</dt><dd><b>Hen phế quản</b></dd></dl>'],
     ];
-    return scene(`<div class="fig bleed" id="pphFig"><svg viewBox="0 0 220 230" role="img" aria-label="Tử cung đờ đang chảy máu">
+    return scene(`${vtabs(['ut', '🩸 Tử cung'], ['game', '🎮 Dán CCĐ'], ['photo', '📷 Bảng thầy'])}<div class="fig pane on bleed" data-pane="ut" id="pphFig"><svg viewBox="0 0 220 230" role="img" aria-label="Tử cung đờ đang chảy máu">
         <g class="ut-shrink"><path id="pphUt" d="${UT}" transform="translate(10 0)" fill="#ffd3e0" stroke="${INK}" stroke-width="5" style="transition:fill .6s"/>
           <circle cx="94" cy="70" r="6" fill="${INK}"/><circle cx="126" cy="70" r="6" fill="${INK}"/><path id="pphMouth" d="M98 96 q12 -8 24 0" stroke="${INK}" stroke-width="5" fill="none" stroke-linecap="round"/></g>
         <circle class="bdrop" cx="104" cy="194" r="7" fill="#f06a7a" stroke="${INK}" stroke-width="2"/><circle class="bdrop" cx="116" cy="194" r="6" fill="#f06a7a" stroke="${INK}" stroke-width="2"/><circle class="bdrop" cx="110" cy="196" r="5" fill="#f06a7a" stroke="${INK}" stroke-width="2"/>
         <text id="pphTxt" x="110" y="226" text-anchor="middle" font-size="14" font-weight="900" fill="#e0568a">Đờ tử cung — chảy máu!</text>
-      </svg></div>`,
-    `<div class="seg" id="pphTabs">${T.map(([k, n]) => `<button class="btn" type="button" data-t="${k}">${n}</button>`).join('')}</div>
-      ${T.map(([k, n, c, body]) => `<div class="tabpanel box ${c}" data-p="${k}">${body}</div>`).join('')}
-      <p class="hot-out" id="pphHint">👆 Chọn 1 “lính cứu hỏa”.</p>
-      ${tray(
-        stk('🎮', 'Dán CCĐ', `<div class="sort"><div class="pool">
+      </svg></div>
+      <div class="pane" data-pane="game" style="flex-direction:column;justify-content:center"><div class="sort"><div class="pool no-swipe">
           <button class="card" type="button" data-bin="pg" data-why="PGF2α gây co thắt phế quản ⇒ CCĐ hen." data-hint="thuốc nào làm co thắt phế quản?">🫁 Hen phế quản</button>
           <button class="card" type="button" data-bin="er" data-why="Ergometrine co mạch ⇒ CCĐ tiền sản giật." data-hint="thuốc nào co mạch gây tăng huyết áp?">🤰 Tiền sản giật</button>
-          <button class="card" type="button" data-bin="ox" data-why="WHO: oxytocin CCĐ tiêm TM trực tiếp (bolus)." data-hint="chống chỉ định về đường dùng.">⚡ Tiêm TM trực tiếp</button>
+          <button class="card" type="button" data-bin="ox" data-why="WHO: oxytocin CCĐ tiêm TM trực tiếp (bolus) — tụt huyết áp." data-hint="chống chỉ định về đường dùng.">⚡ Tiêm TM trực tiếp</button>
           <button class="card" type="button" data-bin="er" data-why="Ergometrine: CCĐ bệnh tim mạch." data-hint="co mạch nặng gánh cho tim...">🫀 Bệnh tim mạch</button>
           <button class="card" type="button" data-bin="er" data-why="Ergometrine: CCĐ tăng huyết áp." data-hint="ai gây co mạch?">📈 Tăng huyết áp</button></div>
           <div class="bins"><div class="bin" role="button" tabindex="0" data-bin="ox" style="--c:var(--pink)"><h4>💧 Oxytocin</h4><div class="slot"></div></div>
           <div class="bin" role="button" tabindex="0" data-bin="er" style="--c:var(--butter)"><h4>🪨 Ergo</h4><div class="slot"></div></div>
           <div class="bin" role="button" tabindex="0" data-bin="pg" style="--c:var(--peach)"><h4>🧪 PGF2α</h4><div class="slot"></div></div></div>
-          <p class="sort-msg">👆 Chọn 1 sticker rồi bấm hộp.</p></div>`, 'o', 'Dán chống chỉ định vào đúng thuốc'),
-        stk('🧮', '60 giọt = ?', '<p>20 IU/1000 mL = 20 mIU/mL ⇒ 60 giọt/ph = 3 mL/ph = <b>60 mIU/ph</b> — gấp 3 lần “trần” tăng co! Được vì <b>buồng tử cung đã trống</b>. Duy trì 40 giọt/ph = 40 mIU/ph.</p><p>15-methyl PGF2α co tử cung rất mạnh ⇒ chủ yếu dùng điều trị sau sanh; <b>không dùng trước khi sanh</b>.</p>', 'y', 'Liều oxytocin khi băng huyết lớn cỡ nào?'),
-        orig('assets/bang1-who-bang-huyet.png', 'Bảng 1 – khuyến cáo WHO'),
-        stk('✨', 'Carbetocin', '<p>Đồng vận thụ thể oxytocin tác dụng kéo dài; <b>100 µg TB/TM liều duy nhất</b>. WHO (2018) khuyến cáo dùng <b>dự phòng</b> băng huyết sau sanh, nhất là dạng <b>bền nhiệt</b> ở nơi khó bảo quản lạnh oxytocin. Không dùng để khởi phát hay tăng co.</p>', 'x', 'Carbetocin — oxytocin bản dài hơi'))}`);
+          <p class="sort-msg">👆 Chống chỉ định này của thuốc nào? Bấm hộp.</p></div></div>
+      ${photo('assets/bang1-who-bang-huyet.png', 'Bảng 1 bài giảng — khuyến cáo WHO điều trị băng huyết sau sanh')}`,
+    `<div class="seg" id="pphTabs">${T.map(([k, n]) => `<button class="btn" type="button" data-t="${k}">${n}</button>`).join('')}</div>
+      ${T.map(([k, n, c, body]) => `<div class="tabpanel box ${c}" data-p="${k}">${body}</div>`).join('')}
+      <p class="hot-out" id="pphHint">👆 Chọn 1 “lính cứu hỏa” — xem liều đầu · tiếp theo · tối đa · CCĐ.</p>`);
   },
+  how: ['Bấm 1 thuốc → tử cung co hồi + bảng liều', '<b>🎮 Dán CCĐ</b>: CCĐ của thuốc nào?', '<b>📷 Bảng thầy</b>: bảng WHO gốc'],
+  notes: [
+    ['🧮', 'Oxytocin 20 IU/1000 mL × <b>60 giọt/ph = 60 mIU/ph</b> — gấp 3 “trần” tăng co, được vì <b>buồng TC đã trống</b>', { more: '20 IU/1000 mL = 20 mIU/mL; 60 giọt = 3 mL/ph. Duy trì 40 giọt/ph = 40 mIU/ph.' }],
+    ['☠', '15-methyl PGF2α co rất mạnh ⇒ chỉ <b>điều trị sau sanh</b>, <b>không dùng trước sanh</b>'],
+    ['✨', '<b>Carbetocin 100 µg</b> TB/TM 1 liều — <b>dự phòng</b> BHSS, dạng bền nhiệt', { more: `${X} Đồng vận thụ thể oxytocin tác dụng kéo dài; WHO 2018 khuyến cáo dự phòng, nhất là nơi khó bảo quản lạnh. Không dùng khởi phát/tăng co.` }],
+  ],
   mount(root) {
     const fig = $('#pphFig', root), ut = $('#pphUt', root), txt = $('#pphTxt', root), mo = $('#pphMouth', root);
     const NAME = { ox: 'Oxytocin', er: 'Ergometrine', pg: '15-methyl PGF2α' };
@@ -270,6 +288,7 @@ TRAM.push(
       fig.classList.remove('bleed'); fig.classList.add('firmed'); ut.style.fill = '#ff9fb8'; mo.setAttribute('d', 'M98 92 q12 10 24 0');
       txt.textContent = `${NAME[k]} ⇒ co hồi chắc ✔`; txt.setAttribute('fill', '#2b8a5e');
       $('#pphHint', root).hidden = true; Sfx.play('chime');
+      if (!fig.classList.contains('on')) $('[data-show=ut]', root).click();
     });
   },
 },
@@ -289,19 +308,19 @@ TRAM.push(
         <text x="250" y="26" text-anchor="middle" font-size="12" font-weight="900" fill="${INK}">cơ TC</text>
         <text x="150" y="232" text-anchor="middle" font-size="11" font-weight="800" fill="#6f6684">CTC</text>
       </svg></div>`,
-    `<div class="hot-out"></div>
-      ${key('💪 PGF2α ⇒ <b>cơn co</b> · 🌸 PGE2 ⇒ <b>chín muồi CTC</b>')}
-      <div class="minis">
-        <div class="mini c-pink"><b>In-vitro</b><span>F2α & E2 đều gây co</span></div>
-        <div class="mini c-sky"><b>In-vivo</b><span>F2α co · E2 chín muồi</span></div>
-      </div>
-      ${tray(
-        stk('🏘️', 'Hàng xóm là sao?', '<p>Prostaglandins phần lớn là <b>paracrine/autocrine hormone</b>: tác động cục bộ lên tế bào lân cận, ngay tại nơi sản xuất.</p><p>Mô tử cung giàu <b>acid arachidonic</b> — tiền chất bắt buộc của PG. Sản khoa hay nhắc: <b>PGE1, PGE2, PGF2α, prostacyclin</b>.</p><ul><li>Màng rụng mẹ → <b>PGF2α</b> (nguồn chính)</li><li>Màng thai, nhất là màng ối → <b>PGE2</b></li><li>Cơ tử cung → <b>prostacyclin</b></li></ul><p>PGE2 ngoại sinh thúc chín muồi CTC mạnh hơn PGF2α nội sinh.</p>', 'n', 'Prostaglandins — hormone hàng xóm'),
-        stk('📈', 'Không đổi theo tuổi thai', '<p>Đáp ứng của tử cung với PG <b>hầu như không thay đổi suốt thai kỳ</b> (khác hẳn oxytocin) ⇒ dùng được để khởi phát hay chấm dứt thai kỳ ở <b>tam cá nguyệt II hoặc III</b>.</p><p>Ở thai trưởng thành lẫn non tháng, ↑ tổng hợp PG nhóm E & F trong tử cung là yếu tố chắc chắn của <b>giai đoạn báo chuyển dạ</b>.</p>', 'n', 'Đáp ứng với PG theo tuổi thai'),
-        stk('📋', '4 chỉ định', '<ol><li>Chấm dứt thai kỳ ở mọi tuổi thai</li><li>Khởi phát chuyển dạ</li><li>Dự phòng băng huyết sau sanh</li><li>Điều trị băng huyết sau sanh</li></ol><p>Chỉ định khác nhau ⇒ loại PG & cách dùng khác nhau. <b>Luôn chọn PG thích hợp.</b></p>', 'n', 'PG thích hợp dùng cho'),
-        stk('☠', 'PGF2α trước sanh?', '<p><b>15-methyl PGF2α</b> co tử cung rất mạnh ⇒ chủ yếu dùng <b>điều trị sau sanh</b>. Prostaglandin F2α <b>không được dùng trước khi sanh</b>.</p>', 'w'),
-        stk('✨', 'Dây chuyền COX', '<p>Phospholipid màng —(<b>phospholipase A₂</b>)→ acid arachidonic —(<b>COX</b>)→ các prostaglandin. Vì vậy thuốc ức chế COX (NSAID, VD indomethacin) có tác dụng giảm co.</p>', 'x', 'Phospholipid → acid arachidonic → PG'))}`, 'hot',
+    `<div class="hot-out"></div>`, 'hot',
     [['dec', '💪 Lớp nào là nguồn <b>chính</b> của PGF2α (thúc cơn co)?'], ['mem', '🌸 Lớp nào sản xuất <b>PGE2</b>?'], ['myo', '🧱 Lớp nào sản xuất chủ yếu <b>prostacyclin</b>?'], ['ctc', '🎯 PGE2 làm <b>chín muồi</b> ở đâu?'], ['fetus', '👶 ↑ PG nhóm E & F báo hiệu giai đoạn gì? Chạm vào bé.']]),
+  gate: true,
+  how: ['Đọc 🎯 nhiệm vụ → chạm đúng lớp', 'Đúng → mở 1 ô ghi nhớ', 'Xong 5 → mở thêm 2 ô tổng kết'],
+  notes: [
+    [1, '<b>Màng rụng mẹ</b> → <b>PGF2α</b> (nguồn chính) ⇒ thúc <b>cơn co</b>', { at: [70, 70, 28], more: 'In-vitro: F2α & E2 đều gây co. <b>In-vivo</b>: F2α ⇒ co · E2 ⇒ chín muồi.' }],
+    [2, '<b>Màng thai</b> (nhất là màng ối) → <b>PGE2</b>', { at: [150, 52, 26] }],
+    [3, '<b>Cơ tử cung</b> → chủ yếu <b>prostacyclin</b>', { at: [40, 96, 26] }],
+    [4, 'PGE2 ⇒ <b>chín muồi cổ tử cung</b> (PGE2 ngoại sinh mạnh hơn PGF2α nội sinh)', { at: [150, 262, 32] }],
+    [5, '↑ tổng hợp PG nhóm <b>E & F</b> = dấu chắc chắn của <b>giai đoạn báo chuyển dạ</b>', { at: [155, 150, 42] }],
+    ['🏘️', '<b>Paracrine/autocrine</b>: tác động tại chỗ · tiền chất <b>acid arachidonic</b>', { more: `Sản khoa hay nhắc: PGE1, PGE2, PGF2α, prostacyclin. ${X} Phospholipid —(phospholipase A₂)→ acid arachidonic —(<b>COX</b>)→ PG ⇒ NSAID (indomethacin) giảm co.` }],
+    ['📈', 'Đáp ứng với PG <b>không đổi</b> suốt thai kỳ ⇒ dùng <b>TCN II–III</b>', { more: '4 chỉ định: <b>chấm dứt thai kỳ</b> mọi tuổi thai · <b>khởi phát</b> · <b>dự phòng</b> & <b>điều trị BHSS</b>. Luôn chọn PG thích hợp. ☠ PGF2α <b>không dùng trước sanh</b>.' }],
+  ],
 },
 
 /* ================= 20. PGE2 ================= */
@@ -327,9 +346,15 @@ TRAM.push(
       </div>
       <div><div class="slider-lbl"><span>Độ chín muồi CTC</span><span id="ripeTxt">vừa</span></div><div class="mbar"><i id="ripe" style="--w:50%"></i></div></div>
       <p class="hot-out" id="gelOut"></p>
-      <button class="btn btn-pink" type="button" id="pull">🧵 Lấy thuốc ra ngay!</button>
-      ${tray(
-        stk('📌', 'Ghi nhớ PGE2', '<ul><li>PGE2 dùng cho mục đích <b>làm chín muồi cổ tử cung</b> hơn là khởi phát chuyển dạ.</li><li><b>Dinoprostone gel</b> (ngả âm đạo phổ biến nhất): đặt <b>trong kênh CTC</b> cho hiệu ứng chín muồi <b>rõ hơn</b> túi cùng sau. <b>Lặp lại mỗi 6 giờ</b> khi cần.</li><li><b>Cervidil 10 mg</b>: không giống gel, <b>lấy ra dễ dàng</b> khi diễn tiến bất lợi như <b>nhịp nhanh</b> hay <b>tử cung tăng trương lực</b>.</li></ul>', 'n', 'Dinoprostone & Cervidil'))}`),
+      <button class="btn btn-pink" type="button" id="pull">🧵 Lấy thuốc ra ngay!</button>`),
+  how: ['Bấm 3 cách đặt → xem vị trí + độ chín muồi', '<b>Cervidil</b> → CTG xấu → <b>🧵 Lấy ra</b>', 'Thử 🧵 với gel'],
+  coach: '#gelSeg',
+  notes: [
+    ['📌', 'PGE2 chủ yếu để <b>làm chín muồi CTC</b> hơn là khởi phát'],
+    [1, 'Gel <b>trong kênh CTC</b>: chín muồi <b>rõ hơn</b> túi cùng sau · <b>lặp lại mỗi 6 giờ</b>', { at: [150, 162, 22], act: b => $('[data-g=kenh]', b).click() }],
+    [2, 'Gel <b>túi cùng sau</b> (dinoprostone — ngả âm đạo phổ biến nhất)', { at: [182, 172, 20], act: b => $('[data-g=tc]', b).click() }],
+    [3, '<b>Cervidil 10 mg</b>: <b>rút ra dễ</b> khi nhịp nhanh / TC tăng trương lực', { at: [183, 210, 44], act: b => $('[data-g=cerv]', b).click() }],
+  ],
   mount(root) {
     let g = 'tc';
     const fig = $('#gelFig', root), out = $('#gelOut', root), cg = $('#gelCtg', root);
@@ -384,11 +409,13 @@ TRAM.push(
         <button class="btn" type="button" aria-pressed="false">⏰ Chuyển dạ thật</button>
         <button class="btn" type="button" aria-pressed="false">🕛 Sau 12 giờ</button>
       </div>
-      ${tray(
-        stk('☠', 'Sẹo mổ cũ', '<p><b>Prostaglandin bị chống chỉ định tuyệt đối khi tử cung có sẹo mổ cũ</b> — vì không thể kiểm soát được sau khi đưa vào cơ thể, lại có thời gian bán hủy rất dài ⇒ cực kỳ nguy hiểm.</p>', 'w', 'PG trên tử cung có sẹo mổ'),
-        stk('📌', 'Luật 6 giờ', '<p>Bất chấp loại prostaglandins, nếu phải chuyển sang oxytocin thì buộc phải dùng <b>cách xa</b> prostaglandins: oxytocin chỉ được bắt đầu sau liều cuối PG <b>ít nhất 6 giờ</b>. Tôn trọng tuyệt đối khoảng cách an toàn này.</p><p>Ngưng PG, chuyển oxytocin khi: <b>màng ối đã vỡ</b> · <b>CTC đã thuận lợi</b> · <b>chuyển dạ thật sự</b> · <b>sau 12 giờ dùng</b>.</p>', 'n', 'Đổi ca PG → oxytocin'),
-        stk('🔍', 'Vì sao 6 giờ?', '<p>PG còn tác dụng kéo dài; thêm oxytocin lúc PG chưa “hạ nhiệt” ⇒ hai lực co <b>cộng hưởng</b> ⇒ cơn co cường tính, suy thai, vỡ tử cung. Oxytocin t½ 5 phút “tắt là hết”, PG thì không.</p>', 'y', 'Vì sao phải chờ 6 giờ?'))}`);
+`);
   },
+  how: ['Kéo thanh <b>giờ</b> từ 14:00', 'Nút <b>🔒 Bắt đầu oxytocin</b> mở khi đủ 6 giờ', 'Bật các tiêu chí ngưng PG'],
+  notes: [
+    [1, 'Oxytocin chỉ bắt đầu <b>≥ 6 giờ</b> sau liều PG cuối — bất kể loại PG', { at: [120, 212, 32], act: b => { const r = $('#hrs', b); r.value = 6; fire(r, 'input'); }, more: '🔍 PG tác dụng kéo dài; thêm oxytocin lúc PG chưa “hạ nhiệt” ⇒ 2 lực co <b>cộng hưởng</b> ⇒ cường tính, suy thai, vỡ TC.' }],
+    ['☠', 'PG <b>CCĐ tuyệt đối</b> khi tử cung có <b>sẹo mổ cũ</b> — không kiểm soát được, t½ dài'],
+  ],
   mount(root) {
     const bs = $$('#crit .btn', root), r = $('#hrs', root), btn = $('#startOx', root), out = $('#oxOut', root);
     bs.forEach(b => b.onclick = () => {
@@ -421,11 +448,17 @@ TRAM.push(
       <p class="hot-out" id="misoOut">👆 Chọn liều cho ô 0h.</p>
       <button class="btn" type="button" id="misoRst">↺ Xếp lại</button>
     </div>`,
-    `${key('⛔ BYT <b>cấm</b> khởi phát thai <b>đủ tháng</b> · ✅ chỉ <b>TCN II / thai chết lưu</b>, đường âm đạo')}
-      ${key('≈ PGE2 & rẻ — nhưng <b>cường tính rất thường gặp</b>')}
-      ${tray(
-        stk('📌', 'Phác đồ liều', '<p><b>25 mcg đặt túi cùng sau</b> âm đạo; lặp lại nếu cần. Không đáp ứng với <b>2 liều 25 mcg</b> ⇒ tăng lên <b>50 mcg mỗi 6 giờ</b>. <b>Không quá 50 mcg/lần</b> và <b>không quá 200 mcg/ngày</b>.</p><p class="small">Chú thích trong PDF in “lặp lại mỗi giờ”; nguồn gốc của phác đồ (WHO – <i>Managing Complications in Pregnancy and Childbirth</i>) ghi <b>lặp lại sau 6 giờ</b> nếu cần — nhiều khả năng PDF sót số “6”.</p>', 'n', 'Phác đồ misoprostol (chú thích bài giảng)'),
-        stk('⚖️', 'Lợi & hại', '<ul><li>Chất tương tự PGE1 (misoprostol) làm <b>chín muồi CTC</b> nhưng cũng <b>tạo cơn co</b>; hiệu quả tương tự PGE2 trong chín muồi CTC & khởi phát.</li><li>Nhiều đường: âm đạo, uống, ngậm cạnh má, trực tràng; liều thay đổi theo tuổi thai & chỉ định.</li><li><b>Rẻ hơn nhiều</b> so với bất kỳ chế phẩm PGE2 nào.</li><li>☠ Cơn co cường tính <b>rất thường gặp</b>, không kiểm soát được, gây vỡ tử cung ⇒ <b>Bộ Y tế cấm</b> dùng khởi phát chuyển dạ trên thai đủ tháng.</li><li>BYT chấp nhận xem xét khởi phát ở <b>tam cá nguyệt II</b> hay <b>thai chết trong tử cung</b> (vừa chín muồi CTC vừa phát khởi cơn co), dùng <b>đường âm đạo</b>.</li></ul>', 'y', 'Misoprostol: lợi & hại'))}`),
+    '', 'tall'),
+  gate: true, open: true,
+  how: ['Chọn liều ô <b>0h</b> (25/50/100 mcg)', 'Rồi 6h → 12h → 18h — sai luật thì rung + lý do', 'Luật ở ô ①②③'],
+  coach: '#misoSlots',
+  notes: [
+    [1, 'Khởi đầu <b>25 mcg</b> đặt <b>túi cùng sau</b> âm đạo, lặp lại nếu cần (mỗi 6 giờ)', { more: '🔍 PDF in “lặp lại mỗi giờ”; nguồn gốc phác đồ (WHO – <i>Managing Complications</i>) ghi <b>sau 6 giờ</b> — nhiều khả năng PDF sót số “6”.' }],
+    [2, 'Không đáp ứng <b>2 liều 25</b> ⇒ tăng <b>50 mcg mỗi 6 giờ</b>'],
+    [3, '<b>≤ 50 mcg/lần</b> · <b>≤ 200 mcg/ngày</b>'],
+    ['⛔', 'BYT <b>cấm</b> khởi phát thai <b>đủ tháng</b> · chỉ <b>TCN II / thai chết lưu</b>, đường âm đạo'],
+    ['⚖️', '≈ PGE2 & <b>rẻ</b> — nhưng <b>cường tính rất thường gặp</b> → vỡ TC', { more: 'PGE1 làm chín muồi CTC <b>và</b> tạo cơn co. Nhiều đường: âm đạo, uống, ngậm cạnh má, trực tràng; liều đổi theo tuổi thai & chỉ định.' }],
+  ],
   mount(root) {
     const box = $('#misoSlots', root), out = $('#misoOut', root); let doses = [];
     const draw = () => {
@@ -435,7 +468,7 @@ TRAM.push(
       const sum = doses.reduce((a, b) => a + b, 0);
       $('#misoSum', root).textContent = `${sum} / 200 mcg`; $('#misoBar', root).style.setProperty('--w', sum / 200 * 100 + '%');
       $$('[data-d]', box).forEach(b => b.onclick = () => pick(+b.dataset.d, b));
-      if (doses.length === 4) { out.innerHTML = `🎉 Hợp lệ: ${doses.join(' → ')} = <b>${sum} mcg/24 giờ</b>.`; Sfx.play('chime'); }
+      if (doses.length === 4) { out.innerHTML = `🎉 Hợp lệ: ${doses.join(' → ')} = <b>${sum} mcg/24 giờ</b>.`; Sfx.play('chime'); burst(out); fire(out, 'done'); }
     };
     const pick = (d, b) => {
       const n25 = doses.filter(x => x === 25).length, sum = doses.reduce((a, c) => a + c, 0);
@@ -477,17 +510,15 @@ TRAM.push(
         <text x="430" y="226" text-anchor="middle" font-size="12" font-weight="900" fill="${INK}">huyết áp</text>
       </svg></div>`,
     `<div class="seg"><button class="btn on" type="button" data-d="ox">💧 Oxytocin</button><button class="btn" type="button" data-d="er">🪨 Ergometrine</button></div>
-      <p class="hot-out" id="ergOut"></p>
-      ${key('⛔ Không dùng trong thai kỳ — chỉ <b>sau sanh, tử cung đã trống</b>')}
-      <div class="minis">
-        <div class="mini c-butter"><b>20′ · 5′</b><span>TB · tiêm cơ TC</span></div>
-        <div class="mini c-pink"><b>t½ ≈ 2 h</b><span>đỉnh 2 h sau TB</span></div>
-        <div class="mini c-lav"><b>🚫 THA</b><span>TSG · tim mạch</span></div>
-      </div>
-      ${tray(
-        stk('📌', 'Ghi nhớ', '<ul><li>Đáp ứng co cơ tử cung với ergot <b>tăng dần trong thai kỳ</b>.</li><li>Gây co cơ tử cung <b>kéo dài</b>, trương lực tăng kéo dài; trên tim mạch gây <b>tăng huyết áp do co mạch</b>.</li><li>Chỉ định: kiểm soát <b>mất máu sau sanh, đờ tử cung</b> — chỉ dùng sau sanh, khi buồng tử cung đã trống.</li><li>Tác dụng xuất hiện <b>20 phút</b> sau tiêm bắp, hoặc <b>5 phút</b> sau tiêm cơ tử cung.</li><li>Tác dụng dài; nồng độ đỉnh <b>2 giờ</b> sau TB; <b>t½ ≈ 2 giờ</b> (dài hơn oxytocin).</li><li>CCĐ: <b>tăng huyết áp, tiền sản giật chưa kiểm soát, bệnh lý tim mạch</b>.</li></ul>', 'n', 'Ergometrine / Methylergometrine'),
-        stk('🔍', 'Vì sao còn thai cấm?', '<p>Co cứng kéo dài, không có thời gian nghỉ ⇒ hồ huyết nhau không được tưới máu ⇒ <b>thai ngạt</b>; tử cung “bó chặt” ⇒ kẹt thai/nhau. Tác dụng lại dài (t½ ~2 giờ) — không “tắt” nhanh được như oxytocin.</p>', 'y', 'Vì sao còn thai thì tuyệt đối không dùng?'))}`);
+      <p class="hot-out" id="ergOut"></p>`);
   },
+  how: ['Bấm <b>💧 Oxytocin</b> ↔ <b>🪨 Ergometrine</b>', 'So sóng co + mạch máu + kim HA', 'Bấm ô ①② chuyển nhanh'],
+  notes: [
+    [1, 'Oxytocin: co <b>nhịp nhàng, có nghỉ</b> · HA không tăng', { at: [[95, 100, 78], [245, 100, 78]], act: b => $('[data-d=ox]', b).click() }],
+    [2, 'Ergometrine: co <b>cứng kéo dài</b> + <b>co mạch ⇒ ↑ huyết áp</b>', { at: [[430, 70, 54], [430, 196, 38]], act: b => $('[data-d=er]', b).click(), more: 'Đáp ứng với ergot <b>tăng dần</b> trong thai kỳ.' }],
+    ['⏱', 'TB tác dụng sau <b>20′</b> · tiêm cơ TC <b>5′</b> · đỉnh <b>2 h</b> · <b>t½ ≈ 2 h</b>'],
+    ['⛔', 'Chỉ dùng <b>sau sanh</b> (buồng TC trống) cho BHSS/đờ TC · CCĐ <b>THA, TSG, tim mạch</b>', { more: '🔍 Còn thai mà dùng: co cứng không nghỉ ⇒ hồ huyết không được tưới ⇒ <b>thai ngạt</b>, kẹt thai/nhau; t½ dài, không “tắt” nhanh như oxytocin.' }],
+  ],
   mount(root) {
     const sc = $('.scene', root), out = $('#ergOut', root);
     const T = { ox: '💧 Co nhịp nhàng, có nghỉ · HA không tăng.', er: '🪨 Co <b>kéo dài</b>, trương lực tăng · <b>co mạch ⇒ tăng HA</b>.' };
@@ -518,9 +549,9 @@ TRAM.push(
           <dt>Cường tính</dt><dd>&gt; 60″/cơn hoặc &gt; 4 cơn/10′</dd>
           <dt>Thất bại</dt><dd>hết 5 IU ⇒ mai làm lại · 32 mIU/ph</dd>
           <dt>Giảm co</dt><dd>Salbutamol 10 mg/1000 mL, X giọt/ph</dd></dl></template></button></div>`,
-      `${key('👆 Bấm 1 thẻ — vai trò · liều · CCĐ · bẫy hiện ngay đây')}
-      <p class="mut small" style="margin:0">✓ xanh = đã mở. Mở đủ 6 thẻ rồi qua trạm cuối làm thử thách nha!</p>`);
+      `<p class="hot-out">👆 Bấm 1 thẻ thuốc — <b>vai trò · liều · CCĐ · bẫy</b> hiện ngay dưới đây.</p>`, 'tall');
   },
+  how: ['Bấm 1 thẻ thuốc', 'Đọc bảng tra hiện ngay cột phải', 'Mở đủ 6 thẻ rồi qua trạm cuối làm thử thách'],
 },
 
 /* ================= 25. THỬ THÁCH ================= */
@@ -542,8 +573,10 @@ TRAM.push(
     ];
     return scene(`<div class="final-quiz">${Q.map(([q, o], i) => quiz(`<span class="st-num">Câu ${i + 1}/${Q.length}</span> ${q}`, o)).join('')}</div><div id="qEnd" hidden></div>`,
       `<div class="qprog">${Q.map((_, i) => `<i>${i + 1}</i>`).join('')}</div>
-      ${key('⭐ Đúng ngay lần đầu = 1 sao')}`, 'game');
+      <p class="hot-out">⭐ Đúng ngay lần đầu = 1 sao · 🟢 đúng ngay · 🟡 đúng sau khi sai</p>`, 'game');
   },
+  gate: true,
+  how: ['Đọc câu, chọn 1 đáp án', 'Sai thì đọc lý do rồi chọn lại', 'Đủ 10 câu → xem điểm ⭐'],
   mount(root) {
     const qs = $$('.final-quiz .quiz', root), dots = $$('.qprog i', root), end = $('#qEnd', root); let i = 0, score = 0;
     const show = () => { qs.forEach((q, k) => q.classList.toggle('cur', k === i)); dots.forEach((d, k) => d.classList.toggle('now', k === i)); };
@@ -568,7 +601,7 @@ TRAM.push(
         <p class="small mut">Kỷ lục của bà: ${best}/${qs.length}</p>
         <div class="row" style="justify-content:center"><button class="btn" type="button" id="again">🔁 Làm lại</button><a class="btn btn-go" href="#/ban-do">🗺️ Về bản đồ</a></div></div>`;
       $('#again', root).onclick = () => location.reload();
-      Sfx.play('tada'); confetti(score >= 8 ? 90 : 36);
+      Sfx.play('tada'); confetti(score >= 8 ? 90 : 36); fire(end, 'done');
     }
     show();
   },
